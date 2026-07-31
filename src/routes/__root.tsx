@@ -79,21 +79,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "APEX Abroad Consultancy — Staff CRM" },
+      { title: "Dashboard — APEX Abroad Consultancy CRM" },
       {
         name: "description",
         content:
-          "Internal CRM for APEX Abroad Consultancy, Hyderabad: students, leads, documents, visas and payments.",
+          "Live overview of students, applications, deadlines, revenue and visa success across APEX Abroad branches.",
       },
       { name: "author", content: "APEX Abroad Consultancy" },
       { name: "robots", content: "noindex, nofollow" },
-      { property: "og:title", content: "APEX Abroad Consultancy — Staff CRM" },
+      { property: "og:title", content: "Dashboard — APEX Abroad Consultancy CRM" },
       {
         property: "og:description",
-        content: "Multi-branch study-abroad CRM for APEX Abroad Consultancy staff.",
+        content: "Live overview of students, applications, deadlines, revenue and visa success across APEX Abroad branches.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Dashboard — APEX Abroad Consultancy CRM" },
+      { name: "twitter:description", content: "Live overview of students, applications, deadlines, revenue and visa success across APEX Abroad branches." },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },

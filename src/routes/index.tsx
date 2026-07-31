@@ -60,7 +60,7 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "Dashboard — APEX Abroad Consultancy CRM" },
       {
         property: "og:description",
-        content: "Business health at a glance for APEX Abroad Consultancy staff.",
+        content: "Live overview of students, applications, deadlines, revenue and visa success across APEX Abroad branches.",
       },
     ],
   }),
