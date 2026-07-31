@@ -38,7 +38,7 @@ export function TopBar() {
       <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-3 py-3 sm:px-5">
         <div className="flex min-w-0 items-center gap-2">
           <SidebarTrigger className="shrink-0" />
-          <Select defaultValue={branches[0].id}>
+          <Select defaultValue={branches[0]?.id}>
             <SelectTrigger className="hidden h-9 w-[190px] rounded-xl bg-card sm:flex">
               <SelectValue />
             </SelectTrigger>
