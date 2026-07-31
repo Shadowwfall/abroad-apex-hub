@@ -61,7 +61,7 @@ function ActivityPage() {
                 </Avatar>
                 <span
                   className={`absolute -bottom-0.5 -right-0.5 size-3 rounded-full border-2 border-card ${
-                    toneRing[a.tone] ?? toneRing.default
+                    toneRing[a.tone] ?? "bg-muted-foreground"
                   }`}
                 />
               </div>
