@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/table";
 import { inr, students } from "@/data/crm";
 
-export const Route = createFileRoute("/students")({
+export const Route = createFileRoute("/students/")({
   head: () => ({
     meta: [
       { title: "Students — APEX Abroad Consultancy CRM" },
