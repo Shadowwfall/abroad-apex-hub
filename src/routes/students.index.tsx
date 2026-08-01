@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { PageHeader } from "@/components/crm/PageHeader";
 import { StatusPill } from "@/components/crm/StatusPill";
