@@ -13,7 +13,7 @@ import {
 
 import { PageHeader } from "@/components/crm/PageHeader";
 import { Button } from "@/components/ui/button";
-import { branches, inr, monthlyAdmissions, revenueTrend } from "@/data/crm";
+import { branches, monthlyAdmissions } from "@/data/crm";
 
 export const Route = createFileRoute("/reports")({
   head: () => ({
@@ -21,7 +21,7 @@ export const Route = createFileRoute("/reports")({
       { title: "Reports — APEX Abroad Consultancy CRM" },
       {
         name: "description",
-        content: "Branch performance, conversion and revenue reporting for APEX Abroad Consultancy.",
+        content: "Branch performance, conversion and admissions reporting for APEX Abroad Consultancy.",
       },
       { property: "og:title", content: "Reports — APEX Abroad Consultancy CRM" },
       { property: "og:description", content: "Exportable insight across branches and intakes." },
@@ -38,7 +38,7 @@ const tooltipStyle = {
 };
 
 function ReportsPage() {
-  const branchData = branches.map((b) => ({ name: b.name.split(" ")[0], students: b.students, revenue: b.revenue }));
+  const branchData = branches.map((b) => ({ name: b.name.split(" ")[0], students: b.students }));
 
   return (
     <div className="mx-auto max-w-[1400px]">
@@ -85,33 +85,6 @@ function ReportsPage() {
           </div>
         </div>
 
-        <div className="surface-card animate-rise p-4 xl:col-span-2">
-          <h2 className="font-display text-lg font-semibold">Collections summary</h2>
-          <div className="mt-4 overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border/70 text-left text-xs text-muted-foreground">
-                  <th className="py-2 font-medium">Month</th>
-                  <th className="py-2 font-medium">Billed</th>
-                  <th className="py-2 font-medium">Collected</th>
-                  <th className="py-2 text-right font-medium">Collection rate</th>
-                </tr>
-              </thead>
-              <tbody>
-                {revenueTrend.map((r) => (
-                  <tr key={r.month} className="border-b border-border/50 last:border-0">
-                    <td className="py-2.5">{r.month}</td>
-                    <td className="py-2.5">{inr(r.revenue)}</td>
-                    <td className="py-2.5">{inr(r.collected)}</td>
-                    <td className="py-2.5 text-right font-medium text-success">
-                      {Math.round((r.collected / r.revenue) * 100)}%
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
       </div>
     </div>
   );
