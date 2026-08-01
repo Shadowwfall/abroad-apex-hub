@@ -2,8 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import {
   Area,
   AreaChart,
-  Bar,
-  BarChart,
   CartesianGrid,
   Cell,
   Legend,
@@ -18,13 +16,11 @@ import {
   ArrowUpRight,
   CalendarClock,
   CheckCircle2,
-  CircleDollarSign,
   FileClock,
   FileText,
   GraduationCap,
   Plane,
   TrendingUp,
-  Wallet,
 } from "lucide-react";
 
 import { PageHeader } from "@/components/crm/PageHeader";
@@ -32,20 +28,14 @@ import { StatusPill } from "@/components/crm/StatusPill";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Progress } from "@/components/ui/progress";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   activities,
   countryDistribution,
   deadlines,
-  inr,
   leads,
   monthlyAdmissions,
-  payments,
-  branches,
-  revenueTrend,
   tasks,
-  money,
 } from "@/data/crm";
 
 export const Route = createFileRoute("/")({
@@ -55,12 +45,12 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Live overview of students, applications, deadlines, revenue and visa success across APEX Abroad branches.",
+          "Live overview of students, applications, deadlines and visa success across APEX Abroad branches.",
       },
       { property: "og:title", content: "Dashboard — APEX Abroad Consultancy CRM" },
       {
         property: "og:description",
-        content: "Live overview of students, applications, deadlines, revenue and visa success across APEX Abroad branches.",
+        content: "Live overview of students, applications, deadlines and visa success across APEX Abroad branches.",
       },
     ],
   }),
@@ -72,8 +62,6 @@ const kpis = [
   { label: "Active Applications", value: "575", delta: "+4.1%", icon: FileText, tone: "text-info" },
   { label: "Pending Documents", value: "138", delta: "-6.0%", icon: FileClock, tone: "text-warning-foreground" },
   { label: "Upcoming Deadlines", value: "42", delta: "next 14 days", icon: CalendarClock, tone: "text-destructive" },
-  { label: "Total Revenue", value: "₹2.43 Cr", delta: "+12.4%", icon: CircleDollarSign, tone: "text-success" },
-  { label: "Outstanding Payments", value: "₹18.6 L", delta: "31 students", icon: Wallet, tone: "text-primary" },
   { label: "Visa Success Rate", value: "94.2%", delta: "+1.8%", icon: Plane, tone: "text-success" },
   { label: "Admission Success", value: "88.7%", delta: "+2.3%", icon: CheckCircle2, tone: "text-info" },
 ];
@@ -199,50 +187,6 @@ function Dashboard() {
         </div>
       </section>
 
-      <section className="mt-4 grid gap-4 xl:grid-cols-3">
-        <div className="surface-card p-4 xl:col-span-2">
-          <h2 className="font-display text-lg font-semibold">Revenue trend</h2>
-          <p className="mb-3 text-xs text-muted-foreground">Billed vs collected (INR)</p>
-          <div className="h-[240px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={revenueTrend} barGap={4}>
-                <CartesianGrid strokeDasharray="4 4" stroke="var(--color-border)" vertical={false} />
-                <XAxis dataKey="month" tickLine={false} axisLine={false} fontSize={12} stroke="var(--color-muted-foreground)" />
-                <YAxis
-                  tickFormatter={(v: number) => `${v / 100000}L`}
-                  tickLine={false}
-                  axisLine={false}
-                  fontSize={12}
-                  width={38}
-                  stroke="var(--color-muted-foreground)"
-                />
-                <Tooltip contentStyle={tooltipStyle} formatter={(v) => inr(Number(v))} />
-                <Bar dataKey="revenue" fill="var(--color-chart-1)" radius={[6, 6, 0, 0]} />
-                <Bar dataKey="collected" fill="var(--color-chart-2)" radius={[6, 6, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        <div className="surface-card p-4">
-          <h2 className="font-display text-lg font-semibold">Branch performance</h2>
-          <p className="mb-4 text-xs text-muted-foreground">Revenue contribution this year</p>
-          <div className="space-y-4">
-            {branches
-              .filter((b) => b.status === "active")
-              .map((b) => (
-                <div key={b.id}>
-                  <div className="mb-1.5 flex items-center justify-between gap-2 text-sm">
-                    <span className="truncate font-medium">{b.name}</span>
-                    <span className="shrink-0 text-xs text-muted-foreground">{inr(b.revenue)}</span>
-                  </div>
-                  <Progress value={(b.revenue / 8420000) * 100} className="h-2" />
-                </div>
-              ))}
-          </div>
-        </div>
-      </section>
-
       <section className="mt-4 grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
         <div className="surface-card p-4">
           <h2 className="font-display text-lg font-semibold">Recent activity</h2>
@@ -326,29 +270,9 @@ function Dashboard() {
         </div>
 
         <div className="surface-card p-4">
-          <h2 className="font-display text-lg font-semibold">Recent payments</h2>
-          <ul className="mt-4 space-y-3">
-            {payments.slice(0, 4).map((p) => (
-              <li key={p.id} className="flex items-center justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-medium">{p.student}</p>
-                  <p className="text-[11px] text-muted-foreground">
-                    {p.type} · {p.date}
-                  </p>
-                </div>
-                <div className="shrink-0 text-right">
-                  <p className="text-sm font-semibold">{money(p.amount, p.currency)}</p>
-                  <StatusPill status={p.status} className="mt-1" />
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="surface-card p-4">
           <h2 className="font-display text-lg font-semibold">Quick actions</h2>
           <div className="mt-4 grid grid-cols-2 gap-2">
-            {["Add Student", "Add Lead", "Record Payment", "Upload Document", "New Application", "Add Staff"].map(
+            {["Add Student", "Add Lead", "Upload Document", "New Application", "Add Staff"].map(
               (a) => (
                 <Button key={a} variant="outline" className="h-auto justify-start rounded-xl py-3 text-xs">
                   {a}
