@@ -11,17 +11,14 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ActivityRouteImport } from './routes/activity'
-import { Route as AdmissionChecklistRouteImport } from './routes/admission-checklist'
 import { Route as ApplicationsRouteImport } from './routes/applications'
 import { Route as BranchesRouteImport } from './routes/branches'
-import { Route as DocumentsRouteImport } from './routes/documents'
 import { Route as LeadsRouteImport } from './routes/leads'
 import { Route as PaymentsRouteImport } from './routes/payments'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as StaffRouteImport } from './routes/staff'
-import { Route as StudentsRouteImport } from './routes/students'
-import { Route as VisaChecklistRouteImport } from './routes/visa-checklist'
+import { Route as StudentsIndexRouteImport } from './routes/students.index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -33,11 +30,6 @@ const ActivityRoute = ActivityRouteImport.update({
   path: '/activity',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdmissionChecklistRoute = AdmissionChecklistRouteImport.update({
-  id: '/admission-checklist',
-  path: '/admission-checklist',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApplicationsRoute = ApplicationsRouteImport.update({
   id: '/applications',
   path: '/applications',
@@ -46,11 +38,6 @@ const ApplicationsRoute = ApplicationsRouteImport.update({
 const BranchesRoute = BranchesRouteImport.update({
   id: '/branches',
   path: '/branches',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DocumentsRoute = DocumentsRouteImport.update({
-  id: '/documents',
-  path: '/documents',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LeadsRoute = LeadsRouteImport.update({
@@ -78,125 +65,99 @@ const StaffRoute = StaffRouteImport.update({
   path: '/staff',
   getParentRoute: () => rootRouteImport,
 } as any)
-const StudentsRoute = StudentsRouteImport.update({
-  id: '/students',
-  path: '/students',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const VisaChecklistRoute = VisaChecklistRouteImport.update({
-  id: '/visa-checklist',
-  path: '/visa-checklist',
+const StudentsIndexRoute = StudentsIndexRouteImport.update({
+  id: '/students/',
+  path: '/students/',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/activity': typeof ActivityRoute
-  '/admission-checklist': typeof AdmissionChecklistRoute
   '/applications': typeof ApplicationsRoute
   '/branches': typeof BranchesRoute
-  '/documents': typeof DocumentsRoute
   '/leads': typeof LeadsRoute
   '/payments': typeof PaymentsRoute
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
   '/staff': typeof StaffRoute
-  '/students': typeof StudentsRoute
-  '/visa-checklist': typeof VisaChecklistRoute
+  '/students/': typeof StudentsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/activity': typeof ActivityRoute
-  '/admission-checklist': typeof AdmissionChecklistRoute
   '/applications': typeof ApplicationsRoute
   '/branches': typeof BranchesRoute
-  '/documents': typeof DocumentsRoute
   '/leads': typeof LeadsRoute
   '/payments': typeof PaymentsRoute
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
   '/staff': typeof StaffRoute
-  '/students': typeof StudentsRoute
-  '/visa-checklist': typeof VisaChecklistRoute
+  '/students': typeof StudentsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/activity': typeof ActivityRoute
-  '/admission-checklist': typeof AdmissionChecklistRoute
   '/applications': typeof ApplicationsRoute
   '/branches': typeof BranchesRoute
-  '/documents': typeof DocumentsRoute
   '/leads': typeof LeadsRoute
   '/payments': typeof PaymentsRoute
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
   '/staff': typeof StaffRoute
-  '/students': typeof StudentsRoute
-  '/visa-checklist': typeof VisaChecklistRoute
+  '/students/': typeof StudentsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/activity'
-    | '/admission-checklist'
     | '/applications'
     | '/branches'
-    | '/documents'
     | '/leads'
     | '/payments'
     | '/reports'
     | '/settings'
     | '/staff'
-    | '/students'
-    | '/visa-checklist'
+    | '/students/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/activity'
-    | '/admission-checklist'
     | '/applications'
     | '/branches'
-    | '/documents'
     | '/leads'
     | '/payments'
     | '/reports'
     | '/settings'
     | '/staff'
     | '/students'
-    | '/visa-checklist'
   id:
     | '__root__'
     | '/'
     | '/activity'
-    | '/admission-checklist'
     | '/applications'
     | '/branches'
-    | '/documents'
     | '/leads'
     | '/payments'
     | '/reports'
     | '/settings'
     | '/staff'
-    | '/students'
-    | '/visa-checklist'
+    | '/students/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ActivityRoute: typeof ActivityRoute
-  AdmissionChecklistRoute: typeof AdmissionChecklistRoute
   ApplicationsRoute: typeof ApplicationsRoute
   BranchesRoute: typeof BranchesRoute
-  DocumentsRoute: typeof DocumentsRoute
   LeadsRoute: typeof LeadsRoute
   PaymentsRoute: typeof PaymentsRoute
   ReportsRoute: typeof ReportsRoute
   SettingsRoute: typeof SettingsRoute
   StaffRoute: typeof StaffRoute
-  StudentsRoute: typeof StudentsRoute
-  VisaChecklistRoute: typeof VisaChecklistRoute
+  StudentsIndexRoute: typeof StudentsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -215,13 +176,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ActivityRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admission-checklist': {
-      id: '/admission-checklist'
-      path: '/admission-checklist'
-      fullPath: '/admission-checklist'
-      preLoaderRoute: typeof AdmissionChecklistRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/applications': {
       id: '/applications'
       path: '/applications'
@@ -234,13 +188,6 @@ declare module '@tanstack/react-router' {
       path: '/branches'
       fullPath: '/branches'
       preLoaderRoute: typeof BranchesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/documents': {
-      id: '/documents'
-      path: '/documents'
-      fullPath: '/documents'
-      preLoaderRoute: typeof DocumentsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/leads': {
@@ -278,18 +225,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StaffRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/students': {
-      id: '/students'
+    '/students/': {
+      id: '/students/'
       path: '/students'
-      fullPath: '/students'
-      preLoaderRoute: typeof StudentsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/visa-checklist': {
-      id: '/visa-checklist'
-      path: '/visa-checklist'
-      fullPath: '/visa-checklist'
-      preLoaderRoute: typeof VisaChecklistRouteImport
+      fullPath: '/students/'
+      preLoaderRoute: typeof StudentsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -298,17 +238,14 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ActivityRoute: ActivityRoute,
-  AdmissionChecklistRoute: AdmissionChecklistRoute,
   ApplicationsRoute: ApplicationsRoute,
   BranchesRoute: BranchesRoute,
-  DocumentsRoute: DocumentsRoute,
   LeadsRoute: LeadsRoute,
   PaymentsRoute: PaymentsRoute,
   ReportsRoute: ReportsRoute,
   SettingsRoute: SettingsRoute,
   StaffRoute: StaffRoute,
-  StudentsRoute: StudentsRoute,
-  VisaChecklistRoute: VisaChecklistRoute,
+  StudentsIndexRoute: StudentsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
