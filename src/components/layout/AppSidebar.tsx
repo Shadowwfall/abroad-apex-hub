@@ -43,13 +43,9 @@ const groups = [
   },
   {
     label: "Casework",
-    items: [
-      { title: "Documents", url: "/documents", icon: FolderOpen },
-      { title: "Admission Checklist", url: "/admission-checklist", icon: ListChecks },
-      { title: "Visa Checklist", url: "/visa-checklist", icon: Plane },
-      { title: "Payments", url: "/payments", icon: Wallet },
-    ],
+    items: [{ title: "Payments", url: "/payments", icon: Wallet }],
   },
+
   {
     label: "Administration",
     items: [
