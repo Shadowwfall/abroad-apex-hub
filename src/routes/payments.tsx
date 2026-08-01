@@ -1,9 +1,10 @@
 import { useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { PageHeader } from "@/components/crm/PageHeader";
 import { StatusPill } from "@/components/crm/StatusPill";
 import { TableToolbar } from "@/components/crm/TableToolbar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -13,7 +14,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { money, payments } from "@/data/crm";
+import { money, students } from "@/data/crm";
+import { getStudentProfile } from "@/data/student-detail";
 
 export const Route = createFileRoute("/payments")({
   head: () => ({
@@ -21,93 +23,125 @@ export const Route = createFileRoute("/payments")({
       { title: "Payments — APEX Abroad Consultancy CRM" },
       {
         name: "description",
-        content: "Fees, installments, refunds and invoices across currencies for APEX Abroad students.",
+        content: "Student-wise payment records: amount paid, amount pending and payment status per student file.",
       },
       { property: "og:title", content: "Payments — APEX Abroad Consultancy CRM" },
-      { property: "og:description", content: "Finance module for collections, refunds and receipts." },
+      { property: "og:description", content: "Student-wise fee records for APEX Abroad staff." },
     ],
   }),
   component: PaymentsPage,
 });
 
-const stats = [
-  { label: "Collected this month", value: "₹32.9 L", tone: "text-success" },
-  { label: "Outstanding", value: "₹18.6 L", tone: "text-destructive" },
-  { label: "Refunds processed", value: "₹2.2 L", tone: "text-warning-foreground" },
-  { label: "Invoices issued", value: "184", tone: "text-info" },
-];
-
 function PaymentsPage() {
   const [q, setQ] = useState("");
-  const rows = useMemo(
-    () =>
-      payments.filter((p) =>
-        [p.id, p.student, p.type, p.mode, p.status].join(" ").toLowerCase().includes(q.toLowerCase()),
-      ),
-    [q],
-  );
+
+  const rows = useMemo(() => {
+    return students
+      .map((s) => {
+        const profile = getStudentProfile(s.id, s.name, s.country, s.intake);
+        const paid = profile.payments.reduce((a, p) => a + p.paid, 0);
+        const pending = profile.payments.length
+          ? profile.payments.reduce((a, p) => a + (p.amount - p.paid), 0)
+          : s.outstanding;
+        return {
+          student: s,
+          paid,
+          pending,
+          status: pending > 0 ? (paid > 0 ? "Partial" : "Pending") : "Paid",
+        };
+      })
+      .filter((r) =>
+        [r.student.name, r.student.id, r.student.branch, r.student.counsellor]
+          .join(" ")
+          .toLowerCase()
+          .includes(q.toLowerCase()),
+      );
+  }, [q]);
 
   return (
     <div className="mx-auto max-w-[1400px]">
       <PageHeader
         title="Payments"
-        description="Multi-currency collections, installments and refunds."
+        description="Student-wise payment records. Open a student to view their full payment history."
         crumbs={["Payments"]}
         actions={
-          <>
-            <Button variant="outline" size="sm" className="rounded-xl">
-              Record refund
-            </Button>
-            <Button size="sm" className="rounded-xl gradient-warm text-primary-foreground">
-              Record payment
-            </Button>
-          </>
+          <Button size="sm" className="rounded-xl gradient-warm text-primary-foreground">
+            Record payment
+          </Button>
         }
       />
 
-      <div className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        {stats.map((s, i) => (
-          <div key={s.label} className="surface-card lift animate-rise p-4" style={{ animationDelay: `${i * 40}ms` }}>
-            <p className="text-xs text-muted-foreground">{s.label}</p>
-            <p className={`mt-2 font-display text-2xl font-semibold ${s.tone}`}>{s.value}</p>
-          </div>
-        ))}
-      </div>
-
       <div className="surface-card animate-rise overflow-hidden">
-        <TableToolbar value={q} onChange={setQ} placeholder="Search by student, type or receipt no…" />
+        <TableToolbar value={q} onChange={setQ} placeholder="Search by student name, ID or branch…" />
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent">
-                <TableHead>Receipt</TableHead>
                 <TableHead>Student</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Mode</TableHead>
-                <TableHead>Date</TableHead>
+                <TableHead>Branch</TableHead>
+                <TableHead>Counsellor</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead className="text-right">Amount</TableHead>
+                <TableHead className="text-right">Paid</TableHead>
+                <TableHead className="text-right">Pending</TableHead>
+                <TableHead className="text-right">Details</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {rows.map((p) => (
-                <TableRow key={p.id} className="transition-colors hover:bg-accent/40">
-                  <TableCell className="whitespace-nowrap text-sm font-medium">{p.id}</TableCell>
-                  <TableCell className="whitespace-nowrap text-sm">{p.student}</TableCell>
-                  <TableCell className="whitespace-nowrap text-sm text-muted-foreground">{p.type}</TableCell>
-                  <TableCell className="whitespace-nowrap text-sm text-muted-foreground">{p.mode}</TableCell>
-                  <TableCell className="whitespace-nowrap text-sm text-muted-foreground">{p.date}</TableCell>
+              {rows.map((r) => (
+                <TableRow key={r.student.id} className="transition-colors hover:bg-accent/40">
                   <TableCell>
-                    <StatusPill status={p.status} />
+                    <Link
+                      to="/students/$id"
+                      params={{ id: r.student.id }}
+                      className="group flex min-w-0 items-center gap-3"
+                    >
+                      <Avatar className="size-9 shrink-0 border border-border">
+                        <AvatarFallback className="bg-accent text-[11px] font-semibold text-accent-foreground">
+                          {r.student.initials}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-medium transition-colors group-hover:text-primary">
+                          {r.student.name}
+                        </p>
+                        <p className="text-[11px] text-muted-foreground">{r.student.id}</p>
+                      </div>
+                    </Link>
                   </TableCell>
-                  <TableCell className="whitespace-nowrap text-right text-sm font-semibold">
-                    {money(p.amount, p.currency)}
+                  <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
+                    {r.student.branch}
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
+                    {r.student.counsellor}
+                  </TableCell>
+                  <TableCell>
+                    <StatusPill status={r.status} />
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap text-right text-sm font-semibold text-success">
+                    {money(r.paid, "INR")}
+                  </TableCell>
+                  <TableCell
+                    className={`whitespace-nowrap text-right text-sm font-medium ${
+                      r.pending > 0 ? "text-destructive" : "text-muted-foreground"
+                    }`}
+                  >
+                    {money(r.pending, "INR")}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Button asChild variant="ghost" size="sm" className="rounded-lg">
+                      <Link to="/students/$id" params={{ id: r.student.id }}>
+                        View
+                      </Link>
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </div>
+        {rows.length === 0 && (
+          <p className="p-12 text-center text-sm text-muted-foreground">No matching students.</p>
+        )}
       </div>
     </div>
   );
