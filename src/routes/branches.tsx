@@ -69,12 +69,6 @@ function BranchesPage() {
               </div>
               <div className="rounded-xl bg-muted/60 p-3">
                 <dt className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                  <Wallet className="size-3" /> Revenue
-                </dt>
-                <dd className="mt-1 font-display text-lg font-semibold">{inr(b.revenue)}</dd>
-              </div>
-              <div className="rounded-xl bg-muted/60 p-3">
-                <dt className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
                   <Users className="size-3" /> Staff
                 </dt>
                 <dd className="mt-1 font-display text-lg font-semibold">{b.staff}</dd>
