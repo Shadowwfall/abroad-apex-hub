@@ -94,18 +94,25 @@ function StudentsPage() {
                     <Checkbox />
                   </TableCell>
                   <TableCell>
-                    <div className="flex min-w-0 items-center gap-3">
+                    <Link
+                      to="/students/$id"
+                      params={{ id: s.id }}
+                      className="flex min-w-0 items-center gap-3 group"
+                    >
                       <Avatar className="size-9 shrink-0 border border-border">
                         <AvatarFallback className="bg-accent text-[11px] font-semibold text-accent-foreground">
                           {s.initials}
                         </AvatarFallback>
                       </Avatar>
                       <div className="min-w-0">
-                        <p className="truncate text-sm font-medium">{s.name}</p>
+                        <p className="truncate text-sm font-medium transition-colors group-hover:text-primary">
+                          {s.name}
+                        </p>
                         <p className="text-[11px] text-muted-foreground">{s.id}</p>
                       </div>
-                    </div>
+                    </Link>
                   </TableCell>
+
                   <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
                     {s.branch}
                   </TableCell>
