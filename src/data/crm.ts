@@ -14,7 +14,6 @@ export const branches: Branch[] = [
   { id: "br-kkd", name: "Kukatpally", city: "Hyderabad", students: 268, revenue: 5130000, staff: 11, applications: 121, status: "active" },
   { id: "br-ame", name: "Ameerpet", city: "Hyderabad", students: 331, revenue: 6210000, staff: 14, applications: 149, status: "active" },
   { id: "br-gac", name: "Gachibowli", city: "Hyderabad", students: 187, revenue: 3480000, staff: 9, applications: 88, status: "active" },
-  { id: "br-war", name: "Warangal", city: "Warangal", students: 96, revenue: 1290000, staff: 5, applications: 41, status: "archived" },
 ];
 
 export type StudentStatus =
