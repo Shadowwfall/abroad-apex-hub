@@ -14,6 +14,7 @@ import { Route as ActivityRouteImport } from './routes/activity'
 import { Route as ApplicationsRouteImport } from './routes/applications'
 import { Route as BranchesRouteImport } from './routes/branches'
 import { Route as LeadsRouteImport } from './routes/leads'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as PaymentsRouteImport } from './routes/payments'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as SettingsRouteImport } from './routes/settings'
@@ -44,6 +45,11 @@ const BranchesRoute = BranchesRouteImport.update({
 const LeadsRoute = LeadsRouteImport.update({
   id: '/leads',
   path: '/leads',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PaymentsRoute = PaymentsRouteImport.update({
@@ -83,6 +89,7 @@ export interface FileRoutesByFullPath {
   '/applications': typeof ApplicationsRoute
   '/branches': typeof BranchesRoute
   '/leads': typeof LeadsRoute
+  '/login': typeof LoginRoute
   '/payments': typeof PaymentsRoute
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
@@ -96,6 +103,7 @@ export interface FileRoutesByTo {
   '/applications': typeof ApplicationsRoute
   '/branches': typeof BranchesRoute
   '/leads': typeof LeadsRoute
+  '/login': typeof LoginRoute
   '/payments': typeof PaymentsRoute
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
@@ -110,6 +118,7 @@ export interface FileRoutesById {
   '/applications': typeof ApplicationsRoute
   '/branches': typeof BranchesRoute
   '/leads': typeof LeadsRoute
+  '/login': typeof LoginRoute
   '/payments': typeof PaymentsRoute
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
@@ -125,6 +134,7 @@ export interface FileRouteTypes {
     | '/applications'
     | '/branches'
     | '/leads'
+    | '/login'
     | '/payments'
     | '/reports'
     | '/settings'
@@ -138,6 +148,7 @@ export interface FileRouteTypes {
     | '/applications'
     | '/branches'
     | '/leads'
+    | '/login'
     | '/payments'
     | '/reports'
     | '/settings'
@@ -151,6 +162,7 @@ export interface FileRouteTypes {
     | '/applications'
     | '/branches'
     | '/leads'
+    | '/login'
     | '/payments'
     | '/reports'
     | '/settings'
@@ -165,6 +177,7 @@ export interface RootRouteChildren {
   ApplicationsRoute: typeof ApplicationsRoute
   BranchesRoute: typeof BranchesRoute
   LeadsRoute: typeof LeadsRoute
+  LoginRoute: typeof LoginRoute
   PaymentsRoute: typeof PaymentsRoute
   ReportsRoute: typeof ReportsRoute
   SettingsRoute: typeof SettingsRoute
@@ -208,6 +221,13 @@ declare module '@tanstack/react-router' {
       path: '/leads'
       fullPath: '/leads'
       preLoaderRoute: typeof LeadsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/payments': {
@@ -261,6 +281,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApplicationsRoute: ApplicationsRoute,
   BranchesRoute: BranchesRoute,
   LeadsRoute: LeadsRoute,
+  LoginRoute: LoginRoute,
   PaymentsRoute: PaymentsRoute,
   ReportsRoute: ReportsRoute,
   SettingsRoute: SettingsRoute,

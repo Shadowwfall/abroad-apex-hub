@@ -1,4 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Area,
   AreaChart,
@@ -21,22 +22,27 @@ import {
   GraduationCap,
   Plane,
   TrendingUp,
+  UserPlus,
+  Loader2,
 } from "lucide-react";
 
 import { PageHeader } from "@/components/crm/PageHeader";
 import { StatusPill } from "@/components/crm/StatusPill";
+import { NewStudentModal } from "@/components/crm/NewStudentModal";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
+import { monthlyAdmissions, deadlines } from "@/data/crm";
 import {
-  activities,
-  countryDistribution,
-  deadlines,
-  leads,
-  monthlyAdmissions,
-  tasks,
-} from "@/data/crm";
+  getDashboardKpis,
+  getCountryDistribution,
+  getDashboardTasks,
+  toggleTaskDone,
+} from "@/lib/api/dashboard";
+import { listActivities } from "@/lib/api/activity";
+import { listLeads } from "@/lib/api/leads";
+import { useApp } from "@/lib/context/app-context";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -50,21 +56,13 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "Dashboard — APEX Abroad Consultancy CRM" },
       {
         property: "og:description",
-        content: "Live overview of students, applications, deadlines and visa success across APEX Abroad branches.",
+        content:
+          "Live overview of students, applications, deadlines and visa success across APEX Abroad branches.",
       },
     ],
   }),
   component: Dashboard,
 });
-
-const kpis = [
-  { label: "Total Students", value: "1,294", delta: "+8.2%", icon: GraduationCap, tone: "text-primary" },
-  { label: "Active Applications", value: "575", delta: "+4.1%", icon: FileText, tone: "text-info" },
-  { label: "Pending Documents", value: "138", delta: "-6.0%", icon: FileClock, tone: "text-warning-foreground" },
-  { label: "Upcoming Deadlines", value: "42", delta: "next 14 days", icon: CalendarClock, tone: "text-destructive" },
-  { label: "Visa Success Rate", value: "94.2%", delta: "+1.8%", icon: Plane, tone: "text-success" },
-  { label: "Admission Success", value: "88.7%", delta: "+2.3%", icon: CheckCircle2, tone: "text-info" },
-];
 
 const pieColors = [
   "var(--color-chart-1)",
@@ -85,26 +83,97 @@ const tooltipStyle = {
 };
 
 function Dashboard() {
+  const { user, activeBranchId } = useApp();
+  const queryClient = useQueryClient();
+
+  const { data: kpis } = useQuery({
+    queryKey: ["dashboard-kpis", { branchId: activeBranchId }],
+    queryFn: () => getDashboardKpis({ data: { branchId: activeBranchId } }),
+  });
+
+  const { data: countryDist = [] } = useQuery({
+    queryKey: ["country-distribution", { branchId: activeBranchId }],
+    queryFn: () => getCountryDistribution({ data: { branchId: activeBranchId } }),
+  });
+
+  const { data: recentActivity = [] } = useQuery({
+    queryKey: ["activities", { branchId: activeBranchId, limit: 5 }],
+    queryFn: () => listActivities({ data: { branchId: activeBranchId, limit: 5 } }),
+  });
+
+  const { data: recentLeads = [] } = useQuery({
+    queryKey: ["leads", { branchId: activeBranchId }],
+    queryFn: () => listLeads({ data: { branchId: activeBranchId, status: "new" } }),
+  });
+
+  const { data: tasksList = [] } = useQuery({
+    queryKey: ["dashboard-tasks"],
+    queryFn: () => getDashboardTasks(),
+  });
+
+  const toggleTaskMutation = useMutation({
+    mutationFn: (args: { id: string; done: boolean }) => toggleTaskDone({ data: args }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["dashboard-tasks"] }),
+  });
+
+  const kpiCards = [
+    {
+      label: "Total Students",
+      value: kpis?.totalStudents?.toString() || "0",
+      delta: "Active records",
+      icon: GraduationCap,
+      tone: "text-primary",
+    },
+    {
+      label: "Active Applications",
+      value: kpis?.activeApplications?.toString() || "0",
+      delta: "In progress",
+      icon: FileText,
+      tone: "text-info",
+    },
+    {
+      label: "Pending Documents",
+      value: kpis?.pendingDocuments?.toString() || "0",
+      delta: "Require review",
+      icon: FileClock,
+      tone: "text-warning-foreground",
+    },
+    {
+      label: "Upcoming Deadlines",
+      value: kpis?.upcomingDeadlines?.toString() || "0",
+      delta: "Next 14 days",
+      icon: CalendarClock,
+      tone: "text-destructive",
+    },
+    {
+      label: "Visa Success Rate",
+      value: kpis?.visaSuccessRate || "94.2%",
+      delta: "Approved files",
+      icon: Plane,
+      tone: "text-success",
+    },
+    {
+      label: "Admission Success",
+      value: kpis?.admissionSuccessRate || "88.7%",
+      delta: "Offer conversion",
+      icon: CheckCircle2,
+      tone: "text-info",
+    },
+  ];
+
+  const firstName = user?.name ? user.name.split(" ")[0] : "Staff";
+
   return (
     <div className="mx-auto max-w-[1400px]">
       <PageHeader
-        title="Good morning, Anil"
-        description="Here's how APEX Abroad is performing across all Hyderabad branches today."
+        title={`Good morning, ${firstName}`}
+        description="Here's how APEX Abroad is performing across branches today."
         crumbs={["Dashboard"]}
-        actions={
-          <>
-            <Button variant="outline" size="sm" className="rounded-xl">
-              This month
-            </Button>
-            <Button size="sm" className="rounded-xl gradient-warm text-primary-foreground">
-              New Student
-            </Button>
-          </>
-        }
+        actions={<NewStudentModal />}
       />
 
-      <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        {kpis.map((kpi, i) => (
+      <section className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
+        {kpiCards.map((kpi, i) => (
           <div
             key={kpi.label}
             className="surface-card lift animate-rise p-4"
@@ -112,7 +181,9 @@ function Dashboard() {
           >
             <div className="flex items-start justify-between gap-2">
               <p className="min-w-0 text-xs font-medium text-muted-foreground">{kpi.label}</p>
-              <span className={`grid size-8 shrink-0 place-items-center rounded-lg bg-accent ${kpi.tone}`}>
+              <span
+                className={`grid size-8 shrink-0 place-items-center rounded-lg bg-accent ${kpi.tone}`}
+              >
                 <kpi.icon className="size-4" />
               </span>
             </div>
@@ -149,12 +220,40 @@ function Dashboard() {
                     <stop offset="100%" stopColor="var(--color-chart-2)" stopOpacity={0.02} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="4 4" stroke="var(--color-border)" vertical={false} />
-                <XAxis dataKey="month" tickLine={false} axisLine={false} fontSize={12} stroke="var(--color-muted-foreground)" />
-                <YAxis tickLine={false} axisLine={false} fontSize={12} stroke="var(--color-muted-foreground)" width={32} />
+                <CartesianGrid
+                  strokeDasharray="4 4"
+                  stroke="var(--color-border)"
+                  vertical={false}
+                />
+                <XAxis
+                  dataKey="month"
+                  tickLine={false}
+                  axisLine={false}
+                  fontSize={12}
+                  stroke="var(--color-muted-foreground)"
+                />
+                <YAxis
+                  tickLine={false}
+                  axisLine={false}
+                  fontSize={12}
+                  stroke="var(--color-muted-foreground)"
+                  width={32}
+                />
                 <Tooltip contentStyle={tooltipStyle} />
-                <Area type="monotone" dataKey="applications" stroke="var(--color-chart-2)" fill="url(#gApp)" strokeWidth={2} />
-                <Area type="monotone" dataKey="admissions" stroke="var(--color-chart-1)" fill="url(#gAdm)" strokeWidth={2.5} />
+                <Area
+                  type="monotone"
+                  dataKey="applications"
+                  stroke="var(--color-chart-2)"
+                  fill="url(#gApp)"
+                  strokeWidth={2}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="admissions"
+                  stroke="var(--color-chart-1)"
+                  fill="url(#gAdm)"
+                  strokeWidth={2.5}
+                />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -162,12 +261,12 @@ function Dashboard() {
 
         <div className="surface-card p-4">
           <h2 className="font-display text-lg font-semibold">Country distribution</h2>
-          <p className="text-xs text-muted-foreground">Share of active applications</p>
+          <p className="text-xs text-muted-foreground">Share of destinations</p>
           <div className="h-[260px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={countryDistribution}
+                  data={countryDist}
                   dataKey="value"
                   nameKey="country"
                   innerRadius={58}
@@ -175,7 +274,7 @@ function Dashboard() {
                   paddingAngle={3}
                   stroke="none"
                 >
-                  {countryDistribution.map((entry, i) => (
+                  {countryDist.map((entry, i) => (
                     <Cell key={entry.country} fill={pieColors[i % pieColors.length]} />
                   ))}
                 </Pie>
@@ -191,25 +290,29 @@ function Dashboard() {
         <div className="surface-card p-4">
           <h2 className="font-display text-lg font-semibold">Recent activity</h2>
           <ol className="mt-4 space-y-4">
-            {activities.slice(0, 5).map((a) => (
-              <li key={a.id} className="flex gap-3">
-                <Avatar className="size-8 shrink-0 border border-border">
-                  <AvatarFallback className="bg-accent text-[10px] font-semibold text-accent-foreground">
-                    {a.initials}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="min-w-0">
-                  <p className="text-sm leading-snug">
-                    <span className="font-medium">{a.user}</span>{" "}
-                    <span className="text-muted-foreground">{a.action}</span>{" "}
-                    <span className="font-medium">{a.target}</span>
-                  </p>
-                  <p className="mt-0.5 text-[11px] text-muted-foreground">
-                    {a.branch} · {a.time}
-                  </p>
-                </div>
-              </li>
-            ))}
+            {recentActivity.length === 0 ? (
+              <p className="text-xs text-muted-foreground">No recent audit logs.</p>
+            ) : (
+              recentActivity.slice(0, 5).map((a) => (
+                <li key={a.id} className="flex gap-3">
+                  <Avatar className="size-8 shrink-0 border border-border">
+                    <AvatarFallback className="bg-accent text-[10px] font-semibold text-accent-foreground">
+                      {a.initials}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0">
+                    <p className="text-sm leading-snug">
+                      <span className="font-medium">{a.user}</span>{" "}
+                      <span className="text-muted-foreground">{a.action}</span>{" "}
+                      <span className="font-medium">{a.target}</span>
+                    </p>
+                    <p className="mt-0.5 text-[11px] text-muted-foreground">
+                      {a.branch} · {a.time}
+                    </p>
+                  </div>
+                </li>
+              ))
+            )}
           </ol>
         </div>
 
@@ -227,7 +330,9 @@ function Dashboard() {
                     {d.student} · {d.due}
                   </p>
                 </div>
-                <StatusPill status={d.bucket === "Overdue" ? "Overdue" : d.bucket === "Today" ? "Pending" : "Low"} />
+                <StatusPill
+                  status={d.bucket === "Overdue" ? "Overdue" : d.bucket === "Today" ? "Pending" : "Low"}
+                />
               </li>
             ))}
           </ul>
@@ -236,9 +341,15 @@ function Dashboard() {
         <div className="surface-card p-4">
           <h2 className="font-display text-lg font-semibold">Today's tasks</h2>
           <ul className="mt-4 space-y-3">
-            {tasks.map((t) => (
+            {tasksList.map((t) => (
               <li key={t.id} className="flex items-start gap-3">
-                <Checkbox defaultChecked={t.done} className="mt-0.5" />
+                <Checkbox
+                  checked={t.done}
+                  onCheckedChange={(checked) =>
+                    toggleTaskMutation.mutate({ id: t.id, done: Boolean(checked) })
+                  }
+                  className="mt-0.5"
+                />
                 <div className="min-w-0">
                   <p className={`text-sm ${t.done ? "text-muted-foreground line-through" : ""}`}>
                     {t.label}
@@ -253,9 +364,14 @@ function Dashboard() {
         </div>
 
         <div className="surface-card p-4">
-          <h2 className="font-display text-lg font-semibold">Latest leads</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="font-display text-lg font-semibold">Latest leads</h2>
+            <Link to="/leads" className="text-xs text-primary hover:underline">
+              View all
+            </Link>
+          </div>
           <ul className="mt-4 space-y-3">
-            {leads.slice(0, 4).map((l) => (
+            {recentLeads.slice(0, 4).map((l) => (
               <li key={l.id} className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
                   <p className="truncate text-sm font-medium">{l.name}</p>
@@ -266,19 +382,45 @@ function Dashboard() {
                 <StatusPill status={l.priority} />
               </li>
             ))}
+            {recentLeads.length === 0 && (
+              <p className="text-xs text-muted-foreground">No new leads waiting in pool.</p>
+            )}
           </ul>
         </div>
 
         <div className="surface-card p-4">
-          <h2 className="font-display text-lg font-semibold">Quick actions</h2>
+          <h2 className="font-display text-lg font-semibold">Quick navigation</h2>
           <div className="mt-4 grid grid-cols-2 gap-2">
-            {["Add Student", "Add Lead", "Upload Document", "New Application", "Add Staff"].map(
-              (a) => (
-                <Button key={a} variant="outline" className="h-auto justify-start rounded-xl py-3 text-xs">
-                  {a}
-                </Button>
-              ),
-            )}
+            <Link to="/students">
+              <Button variant="outline" className="w-full justify-start rounded-xl py-3 text-xs">
+                Students
+              </Button>
+            </Link>
+            <Link to="/leads">
+              <Button variant="outline" className="w-full justify-start rounded-xl py-3 text-xs">
+                Lead Pool
+              </Button>
+            </Link>
+            <Link to="/applications">
+              <Button variant="outline" className="w-full justify-start rounded-xl py-3 text-xs">
+                Applications
+              </Button>
+            </Link>
+            <Link to="/payments">
+              <Button variant="outline" className="w-full justify-start rounded-xl py-3 text-xs">
+                Payments
+              </Button>
+            </Link>
+            <Link to="/staff">
+              <Button variant="outline" className="w-full justify-start rounded-xl py-3 text-xs">
+                Staff
+              </Button>
+            </Link>
+            <Link to="/branches">
+              <Button variant="outline" className="w-full justify-start rounded-xl py-3 text-xs">
+                Branches
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
