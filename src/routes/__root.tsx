@@ -4,8 +4,10 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
+  redirect,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
@@ -13,6 +15,8 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AppShell } from "@/components/layout/AppShell";
 import { Toaster } from "@/components/ui/sonner";
+import { getCurrentUser, type AuthUser } from "@/lib/auth";
+import { AppContextProvider } from "@/lib/context/app-context";
 
 function NotFoundComponent() {
   return (
@@ -74,12 +78,33 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
-export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+export const Route = createRootRouteWithContext<{
+  queryClient: QueryClient;
+  user?: AuthUser | null;
+}>()({
+  beforeLoad: async ({ location }) => {
+    const user = await getCurrentUser();
+    const isLoginPage = location.pathname === "/login";
+
+    if (!user && !isLoginPage) {
+      throw redirect({
+        to: "/login",
+      });
+    }
+
+    if (user && isLoginPage) {
+      throw redirect({
+        to: "/",
+      });
+    }
+
+    return { user };
+  },
   head: () => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Dashboard — APEX Abroad Consultancy CRM" },
+      { title: "APEX Abroad Consultancy CRM" },
       {
         name: "description",
         content:
@@ -87,15 +112,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { name: "author", content: "APEX Abroad Consultancy" },
       { name: "robots", content: "noindex, nofollow" },
-      { property: "og:title", content: "Dashboard — APEX Abroad Consultancy CRM" },
-      {
-        property: "og:description",
-        content: "Live overview of students, applications, deadlines, revenue and visa success across APEX Abroad branches.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Dashboard — APEX Abroad Consultancy CRM" },
-      { name: "twitter:description", content: "Live overview of students, applications, deadlines, revenue and visa success across APEX Abroad branches." },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -132,15 +148,22 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 
 function RootComponent() {
-  const { queryClient } = Route.useRouteContext();
+  const { queryClient, user } = Route.useRouteContext();
+  const routerState = useRouterState();
+  const isLoginPage = routerState.location.pathname === "/login";
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AppShell>
-        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <Outlet />
-      </AppShell>
-      <Toaster />
+      <AppContextProvider initialUser={user ?? null}>
+        {isLoginPage ? (
+          <Outlet />
+        ) : (
+          <AppShell>
+            <Outlet />
+          </AppShell>
+        )}
+        <Toaster />
+      </AppContextProvider>
     </QueryClientProvider>
   );
 }
