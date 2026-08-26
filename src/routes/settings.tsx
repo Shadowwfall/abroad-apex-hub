@@ -196,13 +196,13 @@ function SettingsPage() {
               <p className="min-w-0 text-sm">Email me when a new website lead arrives</p>
               <Switch
                 checked={prefs?.newLeadEmail ?? true}
-                onCheckedChange={(checked) =>
-                  updatePrefsMutation.mutate({ newLeadEmail: checked })
-                }
+                onCheckedChange={(checked) => updatePrefsMutation.mutate({ newLeadEmail: checked })}
               />
             </div>
             <div className="flex items-center justify-between gap-4 p-4">
-              <p className="min-w-0 text-sm">Notify counsellors 3 days before a document deadline</p>
+              <p className="min-w-0 text-sm">
+                Notify counsellors 3 days before a document deadline
+              </p>
               <Switch
                 checked={prefs?.deadlineReminder ?? true}
                 onCheckedChange={(checked) =>
@@ -223,9 +223,7 @@ function SettingsPage() {
               <p className="min-w-0 text-sm">Alert on visa decision updates</p>
               <Switch
                 checked={prefs?.visaAlerts ?? true}
-                onCheckedChange={(checked) =>
-                  updatePrefsMutation.mutate({ visaAlerts: checked })
-                }
+                onCheckedChange={(checked) => updatePrefsMutation.mutate({ visaAlerts: checked })}
               />
             </div>
           </div>

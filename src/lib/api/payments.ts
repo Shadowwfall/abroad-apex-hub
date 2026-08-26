@@ -16,12 +16,7 @@ export type PaymentSummaryRow = {
 
 export const listPaymentsSummary = createServerFn({ method: "GET" })
   .validator(
-    (params?: {
-      branchId?: string;
-      q?: string;
-      page?: number;
-      pageSize?: number;
-    }) => params || {}
+    (params?: { branchId?: string; q?: string; page?: number; pageSize?: number }) => params || {},
   )
   .handler(async ({ data }): Promise<{ items: PaymentSummaryRow[]; total: number }> => {
     const supabase = createSupabaseServerClient();
@@ -38,7 +33,7 @@ export const listPaymentsSummary = createServerFn({ method: "GET" })
         users!students_counsellor_id_fkey(name),
         payments(id, amount, paid, status)
       `,
-        { count: "exact" }
+        { count: "exact" },
       )
       .is("deleted_at", null)
       .order("name");
@@ -105,7 +100,7 @@ export const recordPayment = createServerFn({ method: "POST" })
       mode: string;
       date?: string;
       reference?: string;
-    }) => data
+    }) => data,
   )
   .handler(async ({ data }) => {
     const supabase = createSupabaseServerClient();
@@ -174,10 +169,7 @@ export const refundPayment = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
 
     // Update payment status
-    await supabase
-      .from("payments")
-      .update({ status: "Refunded" })
-      .eq("id", data.paymentId);
+    await supabase.from("payments").update({ status: "Refunded" }).eq("id", data.paymentId);
 
     return refund;
   });

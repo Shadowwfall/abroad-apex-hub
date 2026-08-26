@@ -5,7 +5,14 @@ import { GraduationCap, Lock, Mail, Loader2, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
 export const Route = createFileRoute("/login")({
@@ -134,9 +141,7 @@ function LoginPage() {
                     <button
                       type="button"
                       onClick={() =>
-                        toast.info(
-                          "Contact your Super Administrator to reset your staff password."
-                        )
+                        toast.info("Contact your Super Administrator to reset your staff password.")
                       }
                       className="text-xs text-primary hover:underline"
                     >
@@ -161,11 +166,7 @@ function LoginPage() {
             </CardContent>
 
             <CardFooter className="flex flex-col space-y-3 pt-2">
-              <Button
-                type="submit"
-                className="w-full font-medium"
-                disabled={loading}
-              >
+              <Button type="submit" className="w-full font-medium" disabled={loading}>
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

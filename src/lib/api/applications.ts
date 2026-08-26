@@ -35,7 +35,7 @@ export const listApplications = createServerFn({ method: "GET" })
         branches(name),
         users!students_counsellor_id_fkey(name),
         student_destinations(id, country, university, course, intake, application_status)
-      `
+      `,
       )
       .is("deleted_at", null)
       .order("created_at", { ascending: false });

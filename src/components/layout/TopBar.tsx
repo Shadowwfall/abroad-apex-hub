@@ -55,9 +55,7 @@ export function TopBar() {
             onValueChange={(val) => {
               setActiveBranchId(val);
               const branchName =
-                val === "all"
-                  ? "All branches"
-                  : branches.find((b) => b.id === val)?.name || val;
+                val === "all" ? "All branches" : branches.find((b) => b.id === val)?.name || val;
               toast.info(`Switched to ${branchName}`);
             }}
           >
@@ -65,9 +63,7 @@ export function TopBar() {
               <SelectValue placeholder="Select branch" />
             </SelectTrigger>
             <SelectContent>
-              {user?.isSuperAdmin && (
-                <SelectItem value="all">All Branches</SelectItem>
-              )}
+              {user?.isSuperAdmin && <SelectItem value="all">All Branches</SelectItem>}
               {branches.map((b) => (
                 <SelectItem key={b.id} value={b.id}>
                   {b.name}

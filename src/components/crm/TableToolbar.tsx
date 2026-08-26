@@ -38,7 +38,9 @@ export function TableToolbar({
         variant="outline"
         size="sm"
         className="rounded-xl"
-        onClick={() => toast.success("Export queued", { description: "CSV will download shortly." })}
+        onClick={() =>
+          toast.success("Export queued", { description: "CSV will download shortly." })
+        }
       >
         <Download className="size-4" /> Export
       </Button>

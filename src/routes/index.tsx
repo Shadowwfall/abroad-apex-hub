@@ -331,7 +331,9 @@ function Dashboard() {
                   </p>
                 </div>
                 <StatusPill
-                  status={d.bucket === "Overdue" ? "Overdue" : d.bucket === "Today" ? "Pending" : "Low"}
+                  status={
+                    d.bucket === "Overdue" ? "Overdue" : d.bucket === "Today" ? "Pending" : "Low"
+                  }
                 />
               </li>
             ))}

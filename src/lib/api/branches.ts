@@ -17,10 +17,7 @@ export type BranchWithCounts = {
 export const listBranches = createServerFn({ method: "GET" }).handler(
   async (): Promise<BranchWithCounts[]> => {
     const supabase = createSupabaseServerClient();
-    const { data: branches, error } = await supabase
-      .from("branches")
-      .select("*")
-      .order("name");
+    const { data: branches, error } = await supabase.from("branches").select("*").order("name");
 
     if (error || !branches) {
       console.error("Error fetching branches:", error);
@@ -30,26 +27,19 @@ export const listBranches = createServerFn({ method: "GET" }).handler(
     // Fetch counts and revenue for each branch
     const results: BranchWithCounts[] = [];
     for (const b of branches) {
-      const [
-        { count: studentCount },
-        { count: staffCount },
-        { data: studentList },
-      ] = await Promise.all([
-        supabase
-          .from("students")
-          .select("*", { count: "exact", head: true })
-          .eq("branch_id", b.id)
-          .is("deleted_at", null),
-        supabase
-          .from("staff_branches")
-          .select("*", { count: "exact", head: true })
-          .eq("branch_id", b.id),
-        supabase
-          .from("students")
-          .select("id")
-          .eq("branch_id", b.id)
-          .is("deleted_at", null),
-      ]);
+      const [{ count: studentCount }, { count: staffCount }, { data: studentList }] =
+        await Promise.all([
+          supabase
+            .from("students")
+            .select("*", { count: "exact", head: true })
+            .eq("branch_id", b.id)
+            .is("deleted_at", null),
+          supabase
+            .from("staff_branches")
+            .select("*", { count: "exact", head: true })
+            .eq("branch_id", b.id),
+          supabase.from("students").select("id").eq("branch_id", b.id).is("deleted_at", null),
+        ]);
 
       let appCount = 0;
       let branchRevenue = 0;
@@ -61,14 +51,10 @@ export const listBranches = createServerFn({ method: "GET" }).handler(
             .from("applications")
             .select("*", { count: "exact", head: true })
             .in("student_id", studentIds),
-          supabase
-            .from("payments")
-            .select("paid")
-            .in("student_id", studentIds),
+          supabase.from("payments").select("paid").in("student_id", studentIds),
         ]);
         appCount = apps || 0;
-        branchRevenue =
-          payments?.reduce((sum, p) => sum + Number(p.paid || 0), 0) || 0;
+        branchRevenue = payments?.reduce((sum, p) => sum + Number(p.paid || 0), 0) || 0;
       }
 
       results.push({
@@ -86,7 +72,7 @@ export const listBranches = createServerFn({ method: "GET" }).handler(
     }
 
     return results;
-  }
+  },
 );
 
 export const createBranch = createServerFn({ method: "POST" })
@@ -123,7 +109,9 @@ export const createBranch = createServerFn({ method: "POST" })
   });
 
 export const updateBranch = createServerFn({ method: "POST" })
-  .validator((data: { id: string; name?: string; city?: string; address?: string; phone?: string }) => data)
+  .validator(
+    (data: { id: string; name?: string; city?: string; address?: string; phone?: string }) => data,
+  )
   .handler(async ({ data }) => {
     const supabase = createSupabaseServerClient();
     const { id, ...updates } = data;

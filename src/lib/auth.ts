@@ -76,5 +76,5 @@ export const getCurrentUser = createServerFn({ method: "GET" }).handler(
       console.error("Error fetching current user session:", err);
       return null;
     }
-  }
+  },
 );

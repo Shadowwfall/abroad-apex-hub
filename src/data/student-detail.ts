@@ -116,22 +116,97 @@ export const studentProfiles: Record<string, StudentProfile> = {
       },
     ],
     uploads: [
-      { name: "Passport (first & last page)", uploaded: "02 Jul 2026", status: "Approved", reviewer: "Neha Gupta" },
-      { name: "IELTS scorecard", uploaded: "05 Jul 2026", status: "Approved", reviewer: "Neha Gupta" },
-      { name: "Degree transcripts", uploaded: "08 Jul 2026", status: "Approved", reviewer: "Priya Menon" },
-      { name: "Personal statement", uploaded: "18 Jul 2026", status: "Received", reviewer: "Ravi Teja", remark: "Under review by counsellor" },
-      { name: "Bank statement (funds)", uploaded: "—", status: "Pending", reviewer: "Neha Gupta", remark: "Awaiting 28-day statement" },
-      { name: "Experience letter", uploaded: "20 Jul 2026", status: "Rejected", reviewer: "Priya Menon", remark: "Not on company letterhead" },
+      {
+        name: "Passport (first & last page)",
+        uploaded: "02 Jul 2026",
+        status: "Approved",
+        reviewer: "Neha Gupta",
+      },
+      {
+        name: "IELTS scorecard",
+        uploaded: "05 Jul 2026",
+        status: "Approved",
+        reviewer: "Neha Gupta",
+      },
+      {
+        name: "Degree transcripts",
+        uploaded: "08 Jul 2026",
+        status: "Approved",
+        reviewer: "Priya Menon",
+      },
+      {
+        name: "Personal statement",
+        uploaded: "18 Jul 2026",
+        status: "Received",
+        reviewer: "Ravi Teja",
+        remark: "Under review by counsellor",
+      },
+      {
+        name: "Bank statement (funds)",
+        uploaded: "—",
+        status: "Pending",
+        reviewer: "Neha Gupta",
+        remark: "Awaiting 28-day statement",
+      },
+      {
+        name: "Experience letter",
+        uploaded: "20 Jul 2026",
+        status: "Rejected",
+        reviewer: "Priya Menon",
+        remark: "Not on company letterhead",
+      },
     ],
     payments: [
-      { id: "PY-9002", type: "Visa Fee", amount: 45000, paid: 0, currency: "INR", mode: "Card", date: "30 Jul 2026", status: "Pending" },
-      { id: "PY-8871", type: "Service Charges", amount: 75000, paid: 75000, currency: "INR", mode: "UPI", date: "12 Jun 2026", status: "Paid" },
-      { id: "PY-8822", type: "Registration", amount: 15000, paid: 15000, currency: "INR", mode: "Cash", date: "02 May 2026", status: "Paid" },
+      {
+        id: "PY-9002",
+        type: "Visa Fee",
+        amount: 45000,
+        paid: 0,
+        currency: "INR",
+        mode: "Card",
+        date: "30 Jul 2026",
+        status: "Pending",
+      },
+      {
+        id: "PY-8871",
+        type: "Service Charges",
+        amount: 75000,
+        paid: 75000,
+        currency: "INR",
+        mode: "UPI",
+        date: "12 Jun 2026",
+        status: "Paid",
+      },
+      {
+        id: "PY-8822",
+        type: "Registration",
+        amount: 15000,
+        paid: 15000,
+        currency: "INR",
+        mode: "Cash",
+        date: "02 May 2026",
+        status: "Paid",
+      },
     ],
     forms: [
-      { name: "UK visa application (online)", progress: 80, status: "In progress", owner: "Neha Gupta" },
-      { name: "University application form — Manchester", progress: 100, status: "Submitted", owner: "Ravi Teja" },
-      { name: "APEX student registration form", progress: 100, status: "Verified", owner: "Ravi Teja" },
+      {
+        name: "UK visa application (online)",
+        progress: 80,
+        status: "In progress",
+        owner: "Neha Gupta",
+      },
+      {
+        name: "University application form — Manchester",
+        progress: 100,
+        status: "Submitted",
+        owner: "Ravi Teja",
+      },
+      {
+        name: "APEX student registration form",
+        progress: 100,
+        status: "Verified",
+        owner: "Ravi Teja",
+      },
     ],
   },
 };
@@ -149,14 +224,36 @@ const defaultProfile = (name: string): StudentProfile => ({
   workExperience: "—",
   destinations: [],
   uploads: [
-    { name: "Passport (first & last page)", uploaded: "—", status: "Pending", reviewer: "Documentation team" },
-    { name: "Academic transcripts", uploaded: "—", status: "Pending", reviewer: "Documentation team" },
+    {
+      name: "Passport (first & last page)",
+      uploaded: "—",
+      status: "Pending",
+      reviewer: "Documentation team",
+    },
+    {
+      name: "Academic transcripts",
+      uploaded: "—",
+      status: "Pending",
+      reviewer: "Documentation team",
+    },
   ],
   payments: [],
-  forms: [{ name: "APEX student registration form", progress: 60, status: "In progress", owner: "Counsellor" }],
+  forms: [
+    {
+      name: "APEX student registration form",
+      progress: 60,
+      status: "In progress",
+      owner: "Counsellor",
+    },
+  ],
 });
 
-export function getStudentProfile(id: string, name: string, country: string, intake: string): StudentProfile {
+export function getStudentProfile(
+  id: string,
+  name: string,
+  country: string,
+  intake: string,
+): StudentProfile {
   const existing = studentProfiles[id];
   if (existing) return existing;
 

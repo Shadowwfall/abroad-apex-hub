@@ -1,43 +1,29 @@
 import { createServerFn } from "@tanstack/react-start";
 import { createSupabaseServerClient } from "../supabase/server";
 
-export const getOrgSettings = createServerFn({ method: "GET" }).handler(
-  async () => {
-    const supabase = createSupabaseServerClient();
-    const { data: settings } = await supabase
-      .from("org_settings")
-      .select("*")
-      .limit(1)
-      .single();
+export const getOrgSettings = createServerFn({ method: "GET" }).handler(async () => {
+  const supabase = createSupabaseServerClient();
+  const { data: settings } = await supabase.from("org_settings").select("*").limit(1).single();
 
-    return (
-      settings || {
-        name: "APEX Abroad Consultancy",
-        head_office: "Road No. 36, Jubilee Hills, Hyderabad",
-        support_email: "contact@apexabroad.in",
-        base_currency: "INR",
-      }
-    );
-  }
-);
+  return (
+    settings || {
+      name: "APEX Abroad Consultancy",
+      head_office: "Road No. 36, Jubilee Hills, Hyderabad",
+      support_email: "contact@apexabroad.in",
+      base_currency: "INR",
+    }
+  );
+});
 
 export const updateOrgSettings = createServerFn({ method: "POST" })
   .validator(
-    (data: {
-      name?: string;
-      headOffice?: string;
-      supportEmail?: string;
-      baseCurrency?: string;
-    }) => data
+    (data: { name?: string; headOffice?: string; supportEmail?: string; baseCurrency?: string }) =>
+      data,
   )
   .handler(async ({ data }) => {
     const supabase = createSupabaseServerClient();
 
-    const { data: existing } = await supabase
-      .from("org_settings")
-      .select("id")
-      .limit(1)
-      .single();
+    const { data: existing } = await supabase.from("org_settings").select("id").limit(1).single();
 
     const payload: any = {
       updated_at: new Date().toISOString(),
@@ -67,37 +53,27 @@ export const updateOrgSettings = createServerFn({ method: "POST" })
     }
   });
 
-export const listFeeTemplates = createServerFn({ method: "GET" }).handler(
-  async () => {
-    const supabase = createSupabaseServerClient();
-    const { data: templates, error } = await supabase
-      .from("fee_templates")
-      .select("*")
-      .order("name");
+export const listFeeTemplates = createServerFn({ method: "GET" }).handler(async () => {
+  const supabase = createSupabaseServerClient();
+  const { data: templates, error } = await supabase.from("fee_templates").select("*").order("name");
 
-    if (error || !templates) {
-      return [];
-    }
-
-    return templates.map((t) => ({
-      id: t.id,
-      name: t.name,
-      amount: Number(t.amount),
-      currency: t.currency,
-      active: t.active,
-    }));
+  if (error || !templates) {
+    return [];
   }
-);
+
+  return templates.map((t) => ({
+    id: t.id,
+    name: t.name,
+    amount: Number(t.amount),
+    currency: t.currency,
+    active: t.active,
+  }));
+});
 
 export const updateFeeTemplate = createServerFn({ method: "POST" })
   .validator(
-    (data: {
-      id: string;
-      name?: string;
-      amount?: number;
-      currency?: string;
-      active?: boolean;
-    }) => data
+    (data: { id: string; name?: string; amount?: number; currency?: string; active?: boolean }) =>
+      data,
   )
   .handler(async ({ data }) => {
     const supabase = createSupabaseServerClient();
@@ -114,36 +90,34 @@ export const updateFeeTemplate = createServerFn({ method: "POST" })
     return updated;
   });
 
-export const getNotificationPrefs = createServerFn({ method: "GET" }).handler(
-  async () => {
-    const supabase = createSupabaseServerClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+export const getNotificationPrefs = createServerFn({ method: "GET" }).handler(async () => {
+  const supabase = createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-    if (!user) {
-      return {
-        newLeadEmail: true,
-        deadlineReminder: true,
-        paymentDigest: true,
-        visaAlerts: true,
-      };
-    }
-
-    const { data: prefs } = await supabase
-      .from("notification_prefs")
-      .select("*")
-      .eq("user_id", user.id)
-      .single();
-
+  if (!user) {
     return {
-      newLeadEmail: prefs?.new_lead_email ?? true,
-      deadlineReminder: prefs?.deadline_reminder ?? true,
-      paymentDigest: prefs?.payment_digest ?? true,
-      visaAlerts: prefs?.visa_alerts ?? true,
+      newLeadEmail: true,
+      deadlineReminder: true,
+      paymentDigest: true,
+      visaAlerts: true,
     };
   }
-);
+
+  const { data: prefs } = await supabase
+    .from("notification_prefs")
+    .select("*")
+    .eq("user_id", user.id)
+    .single();
+
+  return {
+    newLeadEmail: prefs?.new_lead_email ?? true,
+    deadlineReminder: prefs?.deadline_reminder ?? true,
+    paymentDigest: prefs?.payment_digest ?? true,
+    visaAlerts: prefs?.visa_alerts ?? true,
+  };
+});
 
 export const updateNotificationPrefs = createServerFn({ method: "POST" })
   .validator(
@@ -152,7 +126,7 @@ export const updateNotificationPrefs = createServerFn({ method: "POST" })
       deadlineReminder?: boolean;
       paymentDigest?: boolean;
       visaAlerts?: boolean;
-    }) => data
+    }) => data,
   )
   .handler(async ({ data }) => {
     const supabase = createSupabaseServerClient();

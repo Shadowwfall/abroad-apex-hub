@@ -13,12 +13,7 @@ export type StaffItem = {
 };
 
 export const listStaff = createServerFn({ method: "GET" })
-  .validator(
-    (params?: {
-      branchId?: string;
-      q?: string;
-    }) => params || {}
-  )
+  .validator((params?: { branchId?: string; q?: string }) => params || {})
   .handler(async ({ data }): Promise<StaffItem[]> => {
     const supabase = createSupabaseServerClient();
 
@@ -32,7 +27,7 @@ export const listStaff = createServerFn({ method: "GET" })
         active,
         user_roles(role),
         staff_branches(branch_id, branches(id, name))
-      `
+      `,
       )
       .order("name");
 

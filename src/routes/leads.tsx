@@ -2,7 +2,15 @@ import { useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { CalendarDays, Globe2, Sparkles, Plus, Loader2, UserCheck, MessageSquare } from "lucide-react";
+import {
+  CalendarDays,
+  Globe2,
+  Sparkles,
+  Plus,
+  Loader2,
+  UserCheck,
+  MessageSquare,
+} from "lucide-react";
 
 import { PageHeader } from "@/components/crm/PageHeader";
 import { StatusPill } from "@/components/crm/StatusPill";
@@ -36,10 +44,14 @@ export const Route = createFileRoute("/leads")({
       { title: "Lead Pool — APEX Abroad Consultancy CRM" },
       {
         name: "description",
-        content: "Assign, convert or reject incoming study-abroad enquiries from the APEX lead pool.",
+        content:
+          "Assign, convert or reject incoming study-abroad enquiries from the APEX lead pool.",
       },
       { property: "og:title", content: "Lead Pool — APEX Abroad Consultancy CRM" },
-      { property: "og:description", content: "Incoming enquiries waiting for counsellor assignment." },
+      {
+        property: "og:description",
+        content: "Incoming enquiries waiting for counsellor assignment.",
+      },
     ],
   }),
   component: LeadsPage,

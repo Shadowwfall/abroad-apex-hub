@@ -102,7 +102,7 @@ export const listStudents = createServerFn({ method: "GET" })
       status?: string;
       page?: number;
       pageSize?: number;
-    }) => params || {}
+    }) => params || {},
   )
   .handler(async ({ data }): Promise<{ items: StudentListItem[]; total: number }> => {
     const supabase = createSupabaseServerClient();
@@ -128,7 +128,7 @@ export const listStudents = createServerFn({ method: "GET" })
         student_destinations(country, intake),
         payments(amount, paid)
       `,
-        { count: "exact" }
+        { count: "exact" },
       )
       .is("deleted_at", null)
       .order("created_at", { ascending: false });
@@ -162,7 +162,8 @@ export const listStudents = createServerFn({ method: "GET" })
       const country = firstDest?.country || "—";
       const intake = firstDest?.intake || r.preferred_intake || "—";
 
-      const totalAmount = r.payments?.reduce((s: number, p: any) => s + Number(p.amount || 0), 0) || 0;
+      const totalAmount =
+        r.payments?.reduce((s: number, p: any) => s + Number(p.amount || 0), 0) || 0;
       const totalPaid = r.payments?.reduce((s: number, p: any) => s + Number(p.paid || 0), 0) || 0;
       const outstanding = Math.max(0, totalAmount - totalPaid);
 
@@ -206,7 +207,7 @@ export const getStudent = createServerFn({ method: "GET" })
         *,
         branches(id, name),
         users!students_counsellor_id_fkey(id, name)
-      `
+      `,
       )
       .is("deleted_at", null);
 
@@ -226,48 +227,44 @@ export const getStudent = createServerFn({ method: "GET" })
     const actualId = student.id;
 
     // Fetch all related entities in parallel
-    const [
-      { data: destinations },
-      { data: documents },
-      { data: payments },
-      { data: forms },
-    ] = await Promise.all([
-      supabase
-        .from("student_destinations")
-        .select(
-          `
+    const [{ data: destinations }, { data: documents }, { data: payments }, { data: forms }] =
+      await Promise.all([
+        supabase
+          .from("student_destinations")
+          .select(
+            `
           *,
           student_checklist_items(*)
-        `
-        )
-        .eq("student_id", actualId)
-        .order("created_at", { ascending: true }),
-      supabase
-        .from("documents")
-        .select(
-          `
+        `,
+          )
+          .eq("student_id", actualId)
+          .order("created_at", { ascending: true }),
+        supabase
+          .from("documents")
+          .select(
+            `
           *,
           users!documents_reviewer_id_fkey(name)
-        `
-        )
-        .eq("student_id", actualId)
-        .order("uploaded_at", { ascending: false }),
-      supabase
-        .from("payments")
-        .select("*")
-        .eq("student_id", actualId)
-        .order("paid_on", { ascending: false }),
-      supabase
-        .from("forms")
-        .select(
-          `
+        `,
+          )
+          .eq("student_id", actualId)
+          .order("uploaded_at", { ascending: false }),
+        supabase
+          .from("payments")
+          .select("*")
+          .eq("student_id", actualId)
+          .order("paid_on", { ascending: false }),
+        supabase
+          .from("forms")
+          .select(
+            `
           *,
           users!forms_owner_id_fkey(name)
-        `
-        )
-        .eq("student_id", actualId)
-        .order("created_at", { ascending: true }),
-    ]);
+        `,
+          )
+          .eq("student_id", actualId)
+          .order("created_at", { ascending: true }),
+      ]);
 
     const formattedDestinations = (destinations || []).map((d: any) => {
       const items = d.student_checklist_items || [];
@@ -399,7 +396,7 @@ export const createStudent = createServerFn({ method: "POST" })
       score?: string;
       englishTest?: string;
       workExperience?: string;
-    }) => data
+    }) => data,
   )
   .handler(async ({ data }) => {
     const supabase = createSupabaseServerClient();
@@ -498,7 +495,7 @@ export const updateStudent = createServerFn({ method: "POST" })
       score?: string;
       englishTest?: string;
       workExperience?: string;
-    }) => data
+    }) => data,
   )
   .handler(async ({ data }) => {
     const supabase = createSupabaseServerClient();
@@ -516,7 +513,8 @@ export const updateStudent = createServerFn({ method: "POST" })
     if (updates.qualification !== undefined) mappedUpdates.qualification = updates.qualification;
     if (updates.score !== undefined) mappedUpdates.score = updates.score;
     if (updates.englishTest !== undefined) mappedUpdates.english_test = updates.englishTest;
-    if (updates.workExperience !== undefined) mappedUpdates.work_experience = updates.workExperience;
+    if (updates.workExperience !== undefined)
+      mappedUpdates.work_experience = updates.workExperience;
 
     const { data: updated, error } = await supabase
       .from("students")

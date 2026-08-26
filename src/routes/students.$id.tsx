@@ -1,15 +1,7 @@
 import { useState } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  ArrowLeft,
-  MapPin,
-  Plus,
-  Loader2,
-  Upload,
-  ExternalLink,
-  FileText,
-} from "lucide-react";
+import { ArrowLeft, MapPin, Plus, Loader2, Upload, ExternalLink, FileText } from "lucide-react";
 import { toast } from "sonner";
 
 import { PageHeader } from "@/components/crm/PageHeader";
@@ -56,11 +48,7 @@ import { destinations as allDestinations } from "@/data/checklists";
 import { money } from "@/data/crm";
 import { getStudent, type FullStudentDetail } from "@/lib/api/students";
 import { addDestination, updateChecklistItemStatus } from "@/lib/api/destinations";
-import {
-  createDocumentRecord,
-  reviewDocument,
-  getDocumentDownloadUrl,
-} from "@/lib/api/documents";
+import { createDocumentRecord, reviewDocument, getDocumentDownloadUrl } from "@/lib/api/documents";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
 export const Route = createFileRoute("/students/$id")({
@@ -471,7 +459,11 @@ function StudentDetailPage() {
                           {u.uploaded}
                         </TableCell>
                         <TableCell>
-                          <ReviewDropdown docId={u.id} currentStatus={u.status} studentId={studentId} />
+                          <ReviewDropdown
+                            docId={u.id}
+                            currentStatus={u.status}
+                            studentId={studentId}
+                          />
                         </TableCell>
                         <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
                           {u.reviewer}
@@ -516,7 +508,9 @@ function StudentDetailPage() {
               <div className="surface-card p-4">
                 <p className="text-xs text-muted-foreground">Payment status</p>
                 <div className="mt-3">
-                  <StatusPill status={totalDue > 0 ? (totalPaid > 0 ? "Partial" : "Pending") : "Paid"} />
+                  <StatusPill
+                    status={totalDue > 0 ? (totalPaid > 0 ? "Partial" : "Pending") : "Paid"}
+                  />
                 </div>
               </div>
             </div>
@@ -588,9 +582,7 @@ function StudentDetailPage() {
                   </div>
                   <div className="w-40">
                     <Progress value={f.progress} className="h-2" />
-                    <p className="mt-1 text-[11px] text-muted-foreground">
-                      {f.progress}% complete
-                    </p>
+                    <p className="mt-1 text-[11px] text-muted-foreground">{f.progress}% complete</p>
                   </div>
                   <Badge variant="secondary" className="rounded-full text-[11px]">
                     {f.status}
@@ -734,10 +726,7 @@ function ChecklistColumn({
         <h4 className="font-display text-sm font-semibold">{title}</h4>
         <p className="text-[11px] text-muted-foreground">{subtitle}</p>
         <div className="mt-2 flex items-center gap-2">
-          <Progress
-            value={(done / Math.max(items.length, 1)) * 100}
-            className="h-1.5 flex-1"
-          />
+          <Progress value={(done / Math.max(items.length, 1)) * 100} className="h-1.5 flex-1" />
           <span className="text-[11px] text-muted-foreground">
             {done}/{items.length}
           </span>
@@ -768,17 +757,15 @@ function ChecklistColumn({
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-36">
-                {(["Pending", "Received", "Approved", "Rejected", "Waived"] as const).map(
-                  (st) => (
-                    <DropdownMenuItem
-                      key={st}
-                      className="cursor-pointer"
-                      onClick={() => updateMutation.mutate({ itemId: i.id, status: st })}
-                    >
-                      <StatusPill status={st} />
-                    </DropdownMenuItem>
-                  )
-                )}
+                {(["Pending", "Received", "Approved", "Rejected", "Waived"] as const).map((st) => (
+                  <DropdownMenuItem
+                    key={st}
+                    className="cursor-pointer"
+                    onClick={() => updateMutation.mutate({ itemId: i.id, status: st })}
+                  >
+                    <StatusPill status={st} />
+                  </DropdownMenuItem>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
           </li>

@@ -1,762 +1,290 @@
-# Apex Compass
+# APEX Abroad Consultancy — Admin Portal (CRM)
 
-Generate a website for a visa consultancy in Hyderabad that gives service to the students who wish to pursue study abroad and the name of the consultancy is APEX Abroad Consultancy. You are going to build the admin portal of the same website, which is a working place for the workers of the consultancy
+An enterprise-grade internal CRM and casework management platform designed for study-abroad visa consultancies. Built with **TanStack Start**, **React 19**, **Tailwind CSS v4**, and **Supabase PostgreSQL**, this portal powers multi-branch operations, student lifecycle tracking, multi-country checklist compliance, financial ledgering, and role-based staff workflows.
 
-# UI/UX Design Prompt – Epix Abroad Consultancy Admin Portal (CRM)
-
-## Project Overview
-
-Design a premium, modern, enterprise-grade Admin CRM dashboard for **Epix Abroad Consultancy**. This is an internal staff management platform, **not a public marketing website**. The design should inspire trust, professionalism, productivity, and efficiency while remaining visually attractive and easy to use throughout long working hours.
-
-The overall visual identity should use a **warm and welcoming theme** instead of a cold corporate look. Blend professionalism with subtle warmth to make the dashboard feel inviting.
+> [!NOTE]
+> This platform is an internal operations portal for consultancy staff, counsellors, documentation officers, and branch managers. It is connected to [Lovable](https://lovable.dev) and backed by a live Supabase PostgreSQL database with full Row Level Security (RLS).
 
 ---
 
-# Design Vision
+## Key Highlights
 
-The CRM should feel like a combination of:
-
-* Notion's clean organization
-
-* Linear's minimal aesthetics
-
-* Stripe Dashboard's professionalism
-
-* HubSpot CRM's usability
-
-* Monday.com's visual clarity
-
-Avoid outdated admin panel designs.
-
-The interface should feel modern, premium, spacious, elegant, and highly polished.
+- **Multi-Tenant Branch Architecture**: Real-time branch switching with branch-scoped data isolation and multi-branch staff assignment.
+- **Full Student Casework Lifecycle**: End-to-end management from lead capture and one-click conversion to visa approval and enrolment.
+- **Multi-Country Destination Checklists**: Automated admission and visa compliance checklists dynamically seeded for target countries (UK, USA, Canada, Australia, Germany, etc.).
+- **Role-Based Access Control (RBAC)**: Fine-grained permissions across 6 distinct roles (`Super Admin`, `Branch Admin`, `Counsellor`, `Documentation Officer`, `Finance`, and `Visa Team`).
+- **Secure Document Management**: Client-to-storage file uploads with private bucket storage and time-limited signed URL generation for document verification.
+- **Multi-Currency Finance Ledger**: Tracking of payments, installments, auto-generated receipt numbers (`PY-####`), exchange rates, and refund approvals.
+- **Immutable Audit Trail**: Global timeline tracking all mutations with staff attribution, branch context, and change metadata.
 
 ---
 
-# Color Theme
-
-Use a warm professional palette.
-
-Primary Colors:
-
-* Warm Orange
-
-* Soft Amber
-
-* Elegant Gold accents
-
-Supporting Colors:
-
-* White
-
-* Off-white backgrounds
-
-* Light Cream
-
-* Very light Grey surfaces
-
-Text:
-
-* Dark Charcoal
-
-* Medium Grey
-
-* Soft muted labels
-
-Status Colors:
-
-* Green → Success
-
-* Blue → Information
-
-* Orange → Pending
-
-* Yellow → Warning
-
-* Red → Errors
-
-Use subtle gradients only where they enhance visual appeal.
-
-Avoid excessive saturation.
-
----
-
-# Design Principles
-
-* Large spacing
-
-* Rounded corners (12–18px)
-
-* Premium cards
-
-* Soft shadows
-
-* Smooth animations
-
-* Glassmorphism only where appropriate
-
-* Excellent typography hierarchy
-
-* Responsive layout
-
-* Pixel-perfect alignment
-
-* High accessibility
-
-* Minimal clutter
-
-Everything should feel polished and intentional.
-
----
-
-# Dashboard Layout
-
-Top Navigation
-
-Include:
-
-* Company Logo
-
-* Current Branch Selector
-
-* Global Search
-
-* Notifications
-
-* Quick Add button
-
-* User Profile
-
-* Settings
-
-* Theme Toggle
-
-Left Sidebar
-
-Modern collapsible sidebar with icons.
-
-Sections:
-
-* Dashboard
-
-* Students
-
-* Leads
-
-* Applications
-
-* Documents
-
-* Admission Checklist
-
-* Visa Checklist
-
-* Payments
-
-* Staff
-
-* Branches
-
-* Reports
-
-* Activity Logs
-
-* Settings
-
-Active menu should use warm accent highlighting.
-
----
-
-# Dashboard Home
-
-The landing dashboard should immediately communicate business health.
-
-Include attractive KPI cards:
-
-* Total Students
-
-* Active Applications
-
-* Pending Documents
-
-* Upcoming Deadlines
-
-* Total Revenue
-
-* Outstanding Payments
-
-* Visa Success Rate
-
-* Admission Success Rate
-
-Below KPIs:
-
-Interactive charts
-
-* Monthly Admissions
-
-* Country Distribution
-
-* Branch Performance
-
-* Revenue Trends
-
-Recent Activity Timeline
-
-Upcoming Deadlines
-
-Latest Leads
-
-Today's Tasks
-
-Recent Payments
-
-Quick Actions
-
-Everything should be interactive.
-
----
-
-# Super Admin Experience
-
-The Super Admin dashboard must clearly communicate global control across every branch.
-
-Features:
-
-## Global Branch Management
-
-* Create Branch
-
-* Rename Branch
-
-* Edit Branch
-
-* Archive Branch (Soft Delete)
-
-Beautiful branch cards showing:
-
-* Branch Name
-
-* Student Count
-
-* Revenue
-
-* Staff Count
-
-* Active Applications
-
----
-
-## Staff Management
-
-Modern employee management interface.
-
-Features:
-
-* Create Staff
-
-* Edit Staff
-
-* Assign Roles
-
-* Reset Password
-
-* Activate/Deactivate
-
-Support:
-
-* Super Admin
-
-* Branch Admin
-
-* Counsellor
-
-* Documentation Officer
-
-* Finance
-
-* Visa Team
-
-Role badges should be color coded.
-
----
-
-## Multi-Branch Staff Assignment
-
-Beautiful interface for assigning users to multiple branches.
-
-Use:
-
-* Searchable multi-select
-
-* Tag chips
-
-* Branch avatars
-
----
-
-## Global Student Management
-
-Powerful searchable student table.
-
-Columns:
-
-* Student Photo
-
-* Name
-
-* Student ID
-
-* Assigned Branch
-
-* Country
-
-* Intake
-
-* Status
-
-* Counsellor
-
-* Outstanding Balance
-
-Support:
-
-* Advanced Filters
-
-* Sorting
-
-* Bulk Actions
-
-* Export
-
-* Import
-
----
-
-## Student Reassignment
-
-Drag-and-drop branch reassignment interface.
-
-When moving a student:
-
-* Preserve entire activity history
-
-* Show transfer confirmation modal
-
-* Show audit log preview
-
----
-
-## Checklist Template Builder
-
-Allow Super Admin to configure reusable templates.
-
-Hierarchy:
-
-Country
-
-↓
-
-Education Level
-
-↓
-
-Vertical
-
-↓
-
-Checklist Items
-
-Support:
-
-* Drag-and-drop ordering
-
-* Add sections
-
-* Required documents
-
-* Optional documents
-
-* Custom validation
-
----
-
-## Fee Configuration
-
-Allow creation of reusable fee templates.
-
-Examples:
-
-Admission Fee
-
-Visa Fee
-
-University Deposit
-
-Embassy Fee
-
-Medical
-
-Insurance
-
-Service Charges
-
-Currency configurable.
-
----
-
-## Global Audit Center
-
-Beautiful timeline showing:
-
-* Who changed what
-
-* Date
-
-* Time
-
-* Branch
-
-* Before/After values
-
-Include:
-
-Filters
-
-Search
-
-Export
-
----
-
-# Branch Admin Experience
-
-Branch Admin only sees assigned branches.
-
-No access outside their branch.
-
-Everything should clearly indicate branch context.
-
----
-
-## Lead Management
-
-Incoming website leads should appear inside a Lead Pool.
-
-Each lead card includes:
-
-* Student Name
-
-* Interested Country
-
-* Program
-
-* Source
-
-* Date
-
-* Priority
-
-Actions:
-
-Assign
-
-Convert to Student
-
-Reject
-
-Add Note
-
----
-
-## Student Creation
-
-Beautiful multi-step wizard.
-
-Sections:
-
-Personal
-
-Academic
-
-Passport
-
-Guardian
-
-Target Country
-
-University Preference
-
-Financial Details
-
-Documents
-
-Review
-
----
-
-## Student Profile
-
-One-page CRM profile.
-
-Tabs:
-
-Overview
-
-Admission
-
-Visa
-
-Documents
-
-Payments
-
-Notes
-
-Timeline
-
-Activity
-
-Everything should update live.
-
----
-
-## Document Tracking
-
-Separate modules:
-
-Admission Checklist
-
-Visa Checklist
-
-Each document should support:
-
-Pending
-
-Received
-
-Rejected
-
-Waived
-
-Deadline
-
-Assigned Staff
-
-Notes
-
-Preview
-
-Upload
-
-Version History
-
----
-
-## Deadline Tracker
-
-Timeline and calendar views.
-
-Highlight:
-
-Today
-
-This Week
-
-Overdue
-
-Upcoming
-
----
-
-## Payment Management
-
-Professional finance module.
-
-Support:
-
-Multiple Currencies
-
-Installments
-
-Outstanding Balance
-
-Refunds
-
-Discounts
-
-Payment History
-
-Invoice Generation
-
-Receipt Download
-
-Payment Timeline
-
----
-
-## Refund Management
-
-Record:
-
-Refund Amount
-
-Reason
-
-Date
-
-Approved By
-
-Transaction Reference
-
----
-
-## Notes
-
-Allow notes on:
-
-Students
-
-Payments
-
-Documents
-
-Applications
-
-Support:
-
-Mentions
-
-Attachments
-
-Timestamps
-
----
-
-## Branch Activity Timeline
-
-Beautiful chronological timeline.
-
-Show:
-
-Student Created
-
-Payment Added
-
-Document Uploaded
-
-Checklist Updated
-
-Refund Processed
-
-Lead Converted
-
-Staff Action
-
-Each activity should include:
-
-User Avatar
-
-Timestamp
-
-Branch
-
-Description
-
----
-
-# UX Requirements
-
-Every table should support:
-
-* Search
-
-* Filters
-
-* Sorting
-
-* Export
-
-* Pagination
-
-* Bulk Actions
-
-Every page should include:
-
-* Breadcrumbs
-
-* Page Title
-
-* Quick Actions
-
-* Empty States
-
-* Loading Skeletons
-
-* Error States
-
----
-
-# Animations
-
-Use tasteful animations throughout:
-
-* Smooth page transitions
-
-* Hover effects
-
-* Card elevation
-
-* Button ripple
-
-* Loading shimmer
-
-* Animated charts
-
-* Progress indicators
-
-Keep animations fast and subtle.
-
----
-
-# Responsive Design
-
-Fully responsive for:
-
-Desktop
-
-Laptop
-
-Tablet
-
-Mobile
-
-No horizontal scrolling.
-
----
-
-# Overall Goal
-
-Create a CRM that feels like a premium SaaS product rather than a traditional admin panel. Every interaction should communicate quality, speed, and clarity. The interface should make complex workflows—branch management, student lifecycle, document tracking, payments, and auditing—feel intuitive and efficient while maintaining a warm, welcoming visual identity that reflects Epix Abroad Consultancy's brand.
-
-This project was built with [Lovable](https://lovable.dev).
-
-**Live app**: https://abroad-apex-hub.lovable.app
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/e5b38926-b5a5-42bc-b7ca-babcd549c76e).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
-
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
+## System Architecture
+
+```mermaid
+flowchart TD
+    subgraph Client ["Client Layer (TanStack Start + React 19)"]
+        UI[Shadcn / Radix UI + Tailwind v4]
+        Router[TanStack Router - SSR / File-based Routes]
+        Query[TanStack React Query v5]
+        Context[Branch & Auth Context]
+    end
+
+    subgraph Server ["Server RPC Layer (createServerFn)"]
+        AuthFn[Auth & Session Gating]
+        StudentFn[Student & Destination APIs]
+        DocFn[Document & Signed URL APIs]
+        LeadFn[Leads & Conversion APIs]
+        PaymentFn[Finance & Ledger APIs]
+        BranchFn[Branch & Staff Admin APIs]
+    end
+
+    subgraph Supabase ["Supabase Backend"]
+        Auth[Supabase Auth SSR]
+        RLS[Row Level Security & Security Definer Functions]
+        Postgres[(PostgreSQL - 23 Relational Tables)]
+        Storage[Private Documents Storage Bucket]
+        SeqTrig[Code Sequence Triggers APX, LD, PY]
+    end
+
+    UI --> Router
+    Router --> Query
+    Query --> Server
+    Server --> Auth
+    Server --> RLS
+    RLS --> Postgres
+    RLS --> SeqTrig
+    DocFn --> Storage
 ```
+
+---
+
+## Core Features & Modules
+
+### 1. Dashboard & Operational Analytics
+
+- **Executive KPIs**: Real-time indicators for Total Students, Active Applications, Pending Documents, Deadlines, and Success Rates.
+- **Admissions Momentum & Geography**: Interactive area charts for monthly intake trends and pie charts for target destination distribution.
+- **Daily Operations**: Staff task checklist, urgent deadline tracker, and quick-action shortcuts.
+
+### 2. Multi-Branch & Multi-Tenant Management
+
+- Global branch selector with immediate context switching across locations (e.g., Hyderabad Head Office, Somajiguda, Madhapur, Warangal, Karimnagar).
+- Branch-level security isolation enforced via the `has_branch_access(auth.uid(), branch_id)` Postgres security definer function.
+- Branch administration interface to create, modify, or archive branches.
+
+### 3. Student Casework & Lifecycle
+
+- **Unified Identifier Sequence**: Collision-resistant sequence generator for student codes (`APX-####`).
+- **360° Student File**: Detailed records covering personal info, academic history, test scores (IELTS/TOEFL/GRE), passport data, and financial profiles.
+- **Multi-Destination Support**: Attach multiple target countries per student, each with independent university preferences, intakes, and checklist states.
+
+### 4. Admission & Visa Compliance Checklists
+
+- Pre-configured checklist templates for major study destinations (UK, USA, Canada, Australia, Germany).
+- Document lifecycle statuses: `Pending`, `Received`, `Approved`, `Rejected`, and `Waived`.
+- Reusable template builder for super administrators to adjust country-level requirements.
+
+### 5. Document Verification & Private Storage
+
+- Direct uploads to private Supabase Storage buckets.
+- Time-limited (5-minute expiry) signed URL generation for secure document inspection.
+- Officer review notes and status updates directly on student casework profiles.
+
+### 6. Leads Pool & One-Click Conversion
+
+- Incoming lead pipeline with source attribution, intended intake, and priority scoring (`LD-####`).
+- Atomic lead-to-student conversion: automatically spins up a casework file, assigns branch and counsellor, instantiates checklist items, and archives the lead enquiry.
+
+### 7. Applications Kanban Pipeline
+
+- Visual stage tracker from initial intake through final enrollment:
+  $$\text{Counselling} \longrightarrow \text{Shortlisting} \longrightarrow \text{Document Prep} \longrightarrow \text{Applied} \longrightarrow \text{Offer Received} \longrightarrow \text{Visa Processing} \longrightarrow \text{Enrolled}$$
+- Drag-and-drop stage updates with automatic history logging.
+
+### 8. Payments, Receipts & Refund Management
+
+- Multi-currency payment logging with automatic receipt sequencing (`PY-####`) and exchange rate capture.
+- Installment breakdown, pending balance computations, and receipt downloads.
+- Structured refund workflow with managerial approval tracking and transaction reference recording.
+
+### 9. Staff Directory & Global Audit Trail
+
+- Staff directory supporting multi-branch assignment chips, status activation toggles, and role badges.
+- Append-only audit log tracking user ID, branch context, timestamp, action type, and payload details.
+
+---
+
+## Technology Stack
+
+| Layer                  | Technology                                                                                                                                                         |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Framework**          | [TanStack Start v1](https://tanstack.com/start) (Full-stack SSR React Framework)                                                                                   |
+| **Frontend UI**        | [React 19](https://react.dev/), [Tailwind CSS v4](https://tailwindcss.com/), [Radix UI Primitives](https://www.radix-ui.com/), [Lucide Icons](https://lucide.dev/) |
+| **Type-Safe Routing**  | [TanStack Router](https://tanstack.com/router) with automatic route-tree generation                                                                                |
+| **Data Management**    | [TanStack React Query v5](https://tanstack.com/query)                                                                                                              |
+| **Data Visualization** | [Recharts](https://recharts.org/)                                                                                                                                  |
+| **Backend & DB**       | [Supabase](https://supabase.com/) PostgreSQL (23 relational tables, RLS, DB triggers & sequences)                                                                  |
+| **Authentication**     | Supabase Auth SSR with session cookie management and route-level redirection                                                                                       |
+| **File Storage**       | Supabase Storage (Private document bucket with signed URL access)                                                                                                  |
+| **Server RPC**         | TanStack Start `createServerFn` type-safe server endpoints                                                                                                         |
+| **Form Management**    | React Hook Form & Zod validation                                                                                                                                   |
+| **Build & Tooling**    | [Vite 8](https://vitejs.dev/), TypeScript 5.8, ESLint, Prettier                                                                                                    |
+
+---
+
+## Project Structure
+
+```
+abroad-apex-hub/
+├── .agents/                      # Custom Agent skills & configurations
+├── docs/
+│   └── BACKEND-INTERACTION-MAP.md# Comprehensive API interaction blueprint
+├── public/                       # Static public assets & favicon
+├── src/
+│   ├── components/
+│   │   ├── crm/                  # CRM modals & data components (NewStudentModal, RecordPaymentModal, etc.)
+│   │   ├── layout/               # AppShell, AppSidebar, TopBar
+│   │   └── ui/                   # Reusable Shadcn / Radix UI primitives
+│   ├── data/                     # Seed templates & domain definitions
+│   ├── hooks/                    # Custom React utility hooks
+│   ├── integrations/
+│   │   └── supabase/             # Supabase browser client initialization
+│   ├── lib/
+│   │   ├── api/                  # TanStack Start type-safe server functions (createServerFn)
+│   │   │   ├── activity.ts       # Audit trail query endpoints
+│   │   │   ├── applications.ts   # Applications & stage transitions
+│   │   │   ├── branches.ts       # Branch CRUD & archiving
+│   │   │   ├── dashboard.ts      # KPI aggregation & chart metrics
+│   │   │   ├── destinations.ts   # Student destination & checklist mutations
+│   │   │   ├── documents.ts      # Document record creation & signed URLs
+│   │   │   ├── leads.ts          # Lead pool CRUD & student conversion
+│   │   │   ├── payments.ts       # Ledger, receipts & refunds
+│   │   │   ├── settings.ts       # Fee templates & org configuration
+│   │   │   ├── staff.ts          # Staff directory & status management
+│   │   │   └── students.ts       # Student casework CRUD & profiles
+│   │   ├── context/              # App & Branch React Context Provider
+│   │   ├── supabase/             # Supabase server client, client singleton & generated types
+│   │   └── auth.ts               # Server session retrieval & user profile resolution
+│   ├── routes/                   # File-based TanStack Start routes
+│   │   ├── __root.tsx            # Root layout, theme injection, and session gating
+│   │   ├── index.tsx             # Main dashboard
+│   │   ├── login.tsx             # Staff authentication
+│   │   ├── students.index.tsx    # Student list with filters & search
+│   │   ├── students.$id.tsx      # Comprehensive 360° student casework view
+│   │   ├── leads.tsx             # Lead management pool
+│   │   ├── applications.tsx      # Kanban board for application stages
+│   │   ├── payments.tsx          # Financial ledger & receipt viewer
+│   │   ├── staff.tsx             # Staff management directory
+│   │   ├── branches.tsx          # Multi-branch admin interface
+│   │   ├── activity.tsx          # Global audit activity log
+│   │   ├── reports.tsx           # Admissions & branch performance reports
+│   │   └── settings.tsx          # Platform settings & fee catalog
+│   ├── router.tsx                # TanStack Router instance creation
+│   ├── server.ts                 # Nitro server entrypoint
+│   ├── start.ts                  # Client hydration start script
+│   └── styles.css                # Global theme tokens, typography, and animations
+├── package.json
+├── tsconfig.json
+└── vite.config.ts
+```
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (version 18.x, 20.x, or higher)
+- [npm](https://www.npmjs.com/) or [Bun](https://bun.sh/)
+- A [Supabase](https://supabase.com/) project (if running a custom instance)
+
+### Installation
+
+1. **Clone the repository:**
+
+   ```sh
+   git clone <repository-url>
+   cd abroad-apex-hub
+   ```
+
+2. **Install dependencies:**
+
+   ```sh
+   npm install
+   # or
+   bun install
+   ```
+
+3. **Configure Environment Variables:**
+   Create a `.env` or `.env.local` file in the root directory:
+
+   ```env
+   VITE_SUPABASE_URL=https://your-project.supabase.co
+   VITE_SUPABASE_PUBLISHABLE_KEY=your-supabase-publishable-key
+   ```
+
+4. **Start the Development Server:**
+   ```sh
+   npm run dev
+   # or
+   bun run dev
+   ```
+   Open `http://localhost:3000` in your browser.
+
+---
+
+## Available Scripts
+
+| Command           | Description                                                     |
+| ----------------- | --------------------------------------------------------------- |
+| `npm run dev`     | Starts the Vite development server with SSR enabled             |
+| `npm run build`   | Compiles and builds the production bundle for client and server |
+| `npm run preview` | Runs the local preview server for the production build          |
+| `npm run lint`    | Runs ESLint to check for code quality and syntax issues         |
+| `npm run format`  | Runs Prettier across the codebase to ensure consistent styling  |
+
+---
+
+## Default Access & Roles
+
+> [!IMPORTANT]
+> The application uses server-side route guarding. Unauthenticated requests to any internal route will be automatically redirected to `/login`.
+
+### Pre-configured Seed Credentials (Development)
+
+| Role             | Email                            | Default Password | Scope                          |
+| ---------------- | -------------------------------- | ---------------- | ------------------------------ |
+| **Super Admin**  | `admin@apexabroad.in`            | `Admin@123456`   | All Branches & Global Settings |
+| **Branch Admin** | `somajiguda.admin@apexabroad.in` | `Staff@123456`   | Somajiguda Branch Only         |
+| **Counsellor**   | `counsellor@apexabroad.in`       | `Staff@123456`   | Assigned Student Files         |
+
+### Role Hierarchy & Permissions
+
+```mermaid
+graph TD
+    SA[Super Admin] --> BA[Branch Admin]
+    BA --> CO[Counsellor]
+    BA --> DO[Documentation Officer]
+    BA --> FI[Finance Officer]
+    BA --> VT[Visa Team]
+
+    subgraph "Global Scope"
+        SA
+    end
+
+    subgraph "Branch Scope"
+        BA
+        CO
+        DO
+        FI
+        VT
+    end
+```
+
+- **Super Admin**: Complete access to all branches, staff creation, fee template configurations, branch creation/archiving, and the global audit log.
+- **Branch Admin**: Full administrative rights within assigned branches (student oversight, staff oversight, lead conversion).
+- **Counsellor**: Lead tracking, student onboarding, university preferences, and destination checklist management.
+- **Documentation Officer**: Document status review (`Approved`, `Rejected`, `Waived`), file inspection, and checklist verification.
+- **Finance**: Payment recording, installment tracking, receipt generation, and refund processing.
+- **Visa Team**: Visa checklist management, embassy appointment tracking, and visa outcome updates.

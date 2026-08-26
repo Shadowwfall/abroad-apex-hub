@@ -9,7 +9,7 @@ export const addDestination = createServerFn({ method: "POST" })
       university?: string;
       course?: string;
       intake?: string;
-    }) => data
+    }) => data,
   )
   .handler(async ({ data }) => {
     const supabase = createSupabaseServerClient();
@@ -77,7 +77,7 @@ export const updateDestination = createServerFn({ method: "POST" })
       intake?: string;
       applicationStatus?: string;
       visaStatus?: string;
-    }) => data
+    }) => data,
   )
   .handler(async ({ data }) => {
     const supabase = createSupabaseServerClient();
@@ -87,7 +87,8 @@ export const updateDestination = createServerFn({ method: "POST" })
     if (updates.university !== undefined) mapped.university = updates.university;
     if (updates.course !== undefined) mapped.course = updates.course;
     if (updates.intake !== undefined) mapped.intake = updates.intake;
-    if (updates.applicationStatus !== undefined) mapped.application_status = updates.applicationStatus;
+    if (updates.applicationStatus !== undefined)
+      mapped.application_status = updates.applicationStatus;
     if (updates.visaStatus !== undefined) mapped.visa_status = updates.visaStatus;
 
     const { data: updated, error } = await supabase
@@ -105,10 +106,7 @@ export const removeDestination = createServerFn({ method: "POST" })
   .validator((data: { id: string }) => data)
   .handler(async ({ data }) => {
     const supabase = createSupabaseServerClient();
-    const { error } = await supabase
-      .from("student_destinations")
-      .delete()
-      .eq("id", data.id);
+    const { error } = await supabase.from("student_destinations").delete().eq("id", data.id);
 
     if (error) throw new Error(error.message);
     return { success: true };
@@ -120,7 +118,7 @@ export const updateChecklistItemStatus = createServerFn({ method: "POST" })
       itemId: string;
       status: "Pending" | "Received" | "Approved" | "Rejected" | "Waived";
       remark?: string;
-    }) => data
+    }) => data,
   )
   .handler(async ({ data }) => {
     const supabase = createSupabaseServerClient();
