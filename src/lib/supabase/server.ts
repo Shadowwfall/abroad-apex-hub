@@ -4,7 +4,8 @@ import type { Database } from "./types";
 
 export function createSupabaseServerClient() {
   const url = process.env.VITE_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL;
-  const key = process.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+  const key =
+    process.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
   if (!url || !key) {
     throw new Error("Missing Supabase environment variables on server");
@@ -26,7 +27,9 @@ export function createSupabaseServerClient() {
           cookiesToSet.forEach(({ name, value, options }) => {
             setCookie(name, value, {
               ...options,
-              sameSite: options?.sameSite ? (options.sameSite.toLowerCase() as "lax" | "strict" | "none") : "lax",
+              sameSite: options?.sameSite
+                ? (options.sameSite.toLowerCase() as "lax" | "strict" | "none")
+                : "lax",
             });
           });
         } catch {

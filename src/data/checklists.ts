@@ -25,7 +25,10 @@ export const countryChecklists: Record<Destination, CountryPack> = {
     visaName: "UK Student Visa (Route)",
     admission: [
       { label: "Academic qualifications / transcripts" },
-      { label: "English language proof", note: "IELTS/PTE or provider-accepted equivalent where required" },
+      {
+        label: "English language proof",
+        note: "IELTS/PTE or provider-accepted equivalent where required",
+      },
       { label: "Personal statement", note: "Required by most providers" },
       { label: "Academic or professional reference" },
       { label: "Passport copy" },
@@ -37,7 +40,11 @@ export const countryChecklists: Record<Destination, CountryPack> = {
       { label: "CAS (Confirmation of Acceptance for Studies)" },
       { label: "Proof of sufficient funds", note: "Where maintenance requirement applies" },
       { label: "ATAS certificate", note: "Where applicable to the course", optional: true },
-      { label: "Parental / guardian consent & relationship evidence", note: "Applicants under 18", optional: true },
+      {
+        label: "Parental / guardian consent & relationship evidence",
+        note: "Applicants under 18",
+        optional: true,
+      },
       { label: "TB test results", note: "Where required for the country of residence" },
       { label: "Financial sponsor consent letter", optional: true },
       { label: "Additional documents per applicant circumstances", optional: true },
@@ -74,7 +81,11 @@ export const countryChecklists: Record<Destination, CountryPack> = {
       { label: "Academic transcripts" },
       { label: "Diplomas / certificates", note: "Where applicable" },
       { label: "English language proficiency", note: "TOEFL/IELTS/Duolingo where required" },
-      { label: "Standardized test scores", note: "GRE/GMAT/SAT where required by the program", optional: true },
+      {
+        label: "Standardized test scores",
+        note: "GRE/GMAT/SAT where required by the program",
+        optional: true,
+      },
       { label: "Statement of purpose" },
       { label: "Letters of recommendation" },
       { label: "University-specific supporting documents", optional: true },
@@ -86,7 +97,10 @@ export const countryChecklists: Record<Destination, CountryPack> = {
       { label: "Photograph as per specification" },
       { label: "Form I-20" },
       { label: "SEVIS fee registration receipt" },
-      { label: "Academic preparation documents", note: "Transcripts, diplomas, degrees, certificates" },
+      {
+        label: "Academic preparation documents",
+        note: "Transcripts, diplomas, degrees, certificates",
+      },
       { label: "Standardized test scores required by the school", optional: true },
       { label: "Evidence of funds for education, living and travel costs" },
       { label: "Evidence of intent to depart the US after the course" },
@@ -111,7 +125,10 @@ export const countryChecklists: Record<Destination, CountryPack> = {
       { label: "Financial capacity evidence", note: "Where required" },
       { label: "Genuine Student (GS) requirement evidence" },
       { label: "Health examination / OSHC evidence", note: "Where required" },
-      { label: "Documents from the Home Affairs Document Checklist Tool", note: "Varies by passport country and provider" },
+      {
+        label: "Documents from the Home Affairs Document Checklist Tool",
+        note: "Varies by passport country and provider",
+      },
     ],
   },
   Germany: {

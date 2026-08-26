@@ -47,12 +47,9 @@ function StaffPage() {
   });
 
   const statusMutation = useMutation({
-    mutationFn: (args: { staffId: string; active: boolean }) =>
-      updateStaffStatus({ data: args }),
+    mutationFn: (args: { staffId: string; active: boolean }) => updateStaffStatus({ data: args }),
     onSuccess: (updated) => {
-      toast.success(
-        `Staff member ${updated.name} ${updated.active ? "activated" : "deactivated"}`
-      );
+      toast.success(`Staff member ${updated.name} ${updated.active ? "activated" : "deactivated"}`);
       queryClient.invalidateQueries({ queryKey: ["staff"] });
     },
     onError: (err: Error) => {
@@ -61,7 +58,10 @@ function StaffPage() {
   });
 
   const rows = staffList.filter((s) =>
-    [s.name, s.email, s.role, s.branches.join(" ")].join(" ").toLowerCase().includes(q.toLowerCase())
+    [s.name, s.email, s.role, s.branches.join(" ")]
+      .join(" ")
+      .toLowerCase()
+      .includes(q.toLowerCase()),
   );
 
   return (
@@ -75,9 +75,7 @@ function StaffPage() {
             size="sm"
             className="rounded-xl gradient-warm text-primary-foreground"
             onClick={() =>
-              toast.info(
-                "Staff members can register via the portal login page with their email."
-              )
+              toast.info("Staff members can register via the portal login page with their email.")
             }
           >
             Add Staff
@@ -157,9 +155,7 @@ function StaffPage() {
                         variant="ghost"
                         size="sm"
                         className="rounded-lg"
-                        onClick={() =>
-                          toast.success(`Password reset link sent to ${s.email}`)
-                        }
+                        onClick={() => toast.success(`Password reset link sent to ${s.email}`)}
                       >
                         Reset password
                       </Button>

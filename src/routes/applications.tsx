@@ -114,7 +114,8 @@ function ApplicationsPage() {
                             {app.studentName}
                           </p>
                           <p className="truncate text-[11px] text-muted-foreground">
-                            {app.country} {app.university ? `· ${app.university}` : ""} · {app.intake}
+                            {app.country} {app.university ? `· ${app.university}` : ""} ·{" "}
+                            {app.intake}
                           </p>
                         </div>
                       </Link>

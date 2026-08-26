@@ -19,12 +19,7 @@ export type LeadItem = {
 };
 
 export const listLeads = createServerFn({ method: "GET" })
-  .validator(
-    (params?: {
-      branchId?: string;
-      status?: string;
-    }) => params || {}
-  )
+  .validator((params?: { branchId?: string; status?: string }) => params || {})
   .handler(async ({ data }): Promise<LeadItem[]> => {
     const supabase = createSupabaseServerClient();
 
@@ -34,7 +29,7 @@ export const listLeads = createServerFn({ method: "GET" })
         `
         *,
         users!leads_assigned_to_fkey(name)
-      `
+      `,
       )
       .order("created_at", { ascending: false });
 
@@ -100,7 +95,7 @@ export const createLead = createServerFn({ method: "POST" })
       source?: string;
       priority?: "High" | "Medium" | "Low";
       branchId?: string;
-    }) => data
+    }) => data,
   )
   .handler(async ({ data }) => {
     const supabase = createSupabaseServerClient();
@@ -142,12 +137,7 @@ export const createLead = createServerFn({ method: "POST" })
 
 export const convertLeadToStudent = createServerFn({ method: "POST" })
   .validator(
-    (data: {
-      leadId: string;
-      branchId: string;
-      counsellorId?: string;
-      intake?: string;
-    }) => data
+    (data: { leadId: string; branchId: string; counsellorId?: string; intake?: string }) => data,
   )
   .handler(async ({ data }) => {
     const supabase = createSupabaseServerClient();

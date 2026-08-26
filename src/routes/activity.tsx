@@ -42,7 +42,7 @@ function ActivityPage() {
   });
 
   const rows = activities.filter((a) =>
-    [a.user, a.action, a.target, a.branch].join(" ").toLowerCase().includes(q.toLowerCase())
+    [a.user, a.action, a.target, a.branch].join(" ").toLowerCase().includes(q.toLowerCase()),
   );
 
   return (

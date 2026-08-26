@@ -13,12 +13,7 @@ export type ActivityItem = {
 };
 
 export const listActivities = createServerFn({ method: "GET" })
-  .validator(
-    (params?: {
-      branchId?: string;
-      limit?: number;
-    }) => params || {}
-  )
+  .validator((params?: { branchId?: string; limit?: number }) => params || {})
   .handler(async ({ data }): Promise<ActivityItem[]> => {
     const supabase = createSupabaseServerClient();
     const limit = data.limit || 20;
@@ -35,7 +30,7 @@ export const listActivities = createServerFn({ method: "GET" })
         created_at,
         users(name),
         branches(name)
-      `
+      `,
       )
       .order("created_at", { ascending: false })
       .limit(limit);

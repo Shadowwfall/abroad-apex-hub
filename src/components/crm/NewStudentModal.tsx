@@ -115,7 +115,8 @@ export function NewStudentModal({ trigger }: { trigger?: React.ReactNode }) {
               <UserPlus className="size-5 text-primary" /> Create New Student File
             </DialogTitle>
             <DialogDescription>
-              Add a new student to the APEX Abroad CRM. An initial destination and checklist will be automatically generated.
+              Add a new student to the APEX Abroad CRM. An initial destination and checklist will be
+              automatically generated.
             </DialogDescription>
           </DialogHeader>
 

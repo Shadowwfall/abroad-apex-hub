@@ -10,7 +10,7 @@ export const createDocumentRecord = createServerFn({ method: "POST" })
       mime?: string;
       sizeBytes?: number;
       checklistId?: string;
-    }) => data
+    }) => data,
   )
   .handler(async ({ data }) => {
     const supabase = createSupabaseServerClient();
@@ -65,7 +65,7 @@ export const reviewDocument = createServerFn({ method: "POST" })
       docId: string;
       status: "Approved" | "Rejected" | "Received" | "Waived";
       remark?: string;
-    }) => data
+    }) => data,
   )
   .handler(async ({ data }) => {
     const supabase = createSupabaseServerClient();
