@@ -25,8 +25,19 @@ import { createLead } from "@/lib/api/leads";
 import { useApp } from "@/lib/context/app-context";
 import { destinations } from "@/data/checklists";
 
-export function NewLeadModal({ trigger }: { trigger?: React.ReactNode }) {
-  const [open, setOpen] = useState(false);
+export function NewLeadModal({
+  trigger,
+  open: controlledOpen,
+  onOpenChange: setControlledOpen,
+}: {
+  trigger?: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}) {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isControlled = controlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : internalOpen;
+  const setOpen = isControlled ? setControlledOpen! : setInternalOpen;
   const { user, activeBranchId } = useApp();
   const queryClient = useQueryClient();
 

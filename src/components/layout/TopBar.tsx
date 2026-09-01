@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import { Bell, Moon, Plus, Search, Settings, Sun, LogOut, User } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "@tanstack/react-router";
-import { NewLeadModal } from "@/components/crm/NewLeadModal";
+
+const NewLeadModal = lazy(() =>
+  import("@/components/crm/NewLeadModal").then((m) => ({ default: m.NewLeadModal }))
+);
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
@@ -28,6 +31,7 @@ import { useApp } from "@/lib/context/app-context";
 
 export function TopBar() {
   const [dark, setDark] = useState(false);
+  const [showNewLead, setShowNewLead] = useState(false);
   const { user, activeBranchId, setActiveBranchId, signOut } = useApp();
 
   const toggleTheme = () => {
@@ -83,16 +87,19 @@ export function TopBar() {
         </div>
 
         <div className="flex shrink-0 items-center gap-1.5">
-          <NewLeadModal
-            trigger={
-              <Button
-                size="sm"
-                className="hidden rounded-xl gradient-warm text-primary-foreground shadow-[var(--shadow-soft)] hover:opacity-92 sm:inline-flex"
-              >
-                <Plus className="size-4" /> Quick Add
-              </Button>
-            }
-          />
+          <Button
+            size="sm"
+            className="hidden rounded-xl gradient-warm text-primary-foreground shadow-[var(--shadow-soft)] hover:opacity-92 sm:inline-flex cursor-pointer"
+            onClick={() => setShowNewLead(true)}
+          >
+            <Plus className="size-4" /> Quick Add
+          </Button>
+
+          {showNewLead && (
+            <Suspense fallback={null}>
+              <NewLeadModal open={showNewLead} onOpenChange={setShowNewLead} />
+            </Suspense>
+          )}
 
           <Button
             variant="ghost"
