@@ -137,7 +137,7 @@ export const createLead = createServerFn({ method: "POST" })
 
 export const convertLeadToStudent = createServerFn({ method: "POST" })
   .validator(
-    (data: { leadId: string; branchId: string; counsellorId?: string; intake?: string }) => data,
+    (data: { leadId: string; branchId: string; counsellorId: string; intake?: string }) => data,
   )
   .handler(async ({ data }) => {
     const supabase = createSupabaseServerClient();

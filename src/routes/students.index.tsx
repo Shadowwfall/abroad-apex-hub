@@ -6,7 +6,7 @@ import { Loader2 } from "lucide-react";
 import { PageHeader } from "@/components/crm/PageHeader";
 import { StatusPill } from "@/components/crm/StatusPill";
 import { TableToolbar } from "@/components/crm/TableToolbar";
-import { NewStudentModal } from "@/components/crm/NewStudentModal";
+import { NewLeadModal } from "@/components/crm/NewLeadModal";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -67,7 +67,7 @@ function StudentsPage() {
         crumbs={["Students"]}
         actions={
           <>
-            <NewStudentModal />
+            <NewLeadModal />
           </>
         }
       />
@@ -111,7 +111,7 @@ function StudentsPage() {
                   <TableCell colSpan={8} className="h-32 text-center">
                     <p className="font-display text-base font-semibold">No students found</p>
                     <p className="mt-1 text-xs text-muted-foreground">
-                      Try a different search term or click New Student to create a record.
+                      Try a different search term or click New Lead to register a prospective student.
                     </p>
                   </TableCell>
                 </TableRow>

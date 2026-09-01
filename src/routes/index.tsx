@@ -28,7 +28,7 @@ import {
 
 import { PageHeader } from "@/components/crm/PageHeader";
 import { StatusPill } from "@/components/crm/StatusPill";
-import { NewStudentModal } from "@/components/crm/NewStudentModal";
+import { NewLeadModal } from "@/components/crm/NewLeadModal";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -113,7 +113,15 @@ function Dashboard() {
 
   const toggleTaskMutation = useMutation({
     mutationFn: (args: { id: string; done: boolean }) => toggleTaskDone({ data: args }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["dashboard-tasks"] }),
+    onMutate: async (args) => {
+      await queryClient.cancelQueries({ queryKey: ["dashboard-tasks"] });
+      queryClient.setQueryData(["dashboard-tasks"], (old: typeof tasksList | undefined) =>
+        (old || []).map((t) => (t.id === args.id ? { ...t, done: args.done } : t)),
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["dashboard-tasks"] });
+    },
   });
 
   const kpiCards = [
@@ -169,7 +177,7 @@ function Dashboard() {
         title={`Good morning, ${firstName}`}
         description="Here's how APEX Abroad is performing across branches today."
         crumbs={["Dashboard"]}
-        actions={<NewStudentModal />}
+        actions={<NewLeadModal />}
       />
 
       <section className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
@@ -344,19 +352,22 @@ function Dashboard() {
           <h2 className="font-display text-lg font-semibold">Today's tasks</h2>
           <ul className="mt-4 space-y-3">
             {tasksList.map((t) => (
-              <li key={t.id} className="flex items-start gap-3">
+              <li key={t.id} className="flex items-start gap-3 cursor-pointer rounded-lg p-1.5 -m-1.5 transition-colors hover:bg-accent/40"
+                onClick={() => toggleTaskMutation.mutate({ id: t.id, done: !t.done })}
+              >
                 <Checkbox
                   checked={t.done}
                   onCheckedChange={(checked) =>
                     toggleTaskMutation.mutate({ id: t.id, done: Boolean(checked) })
                   }
                   className="mt-0.5"
+                  onClick={(e) => e.stopPropagation()}
                 />
                 <div className="min-w-0">
-                  <p className={`text-sm ${t.done ? "text-muted-foreground line-through" : ""}`}>
+                  <p className={`text-sm transition-all duration-200 ${t.done ? "text-muted-foreground line-through opacity-60" : ""}`}>
                     {t.label}
                   </p>
-                  <Badge variant="secondary" className="mt-1 rounded-full text-[10px]">
+                  <Badge variant="secondary" className={`mt-1 rounded-full text-[10px] transition-opacity duration-200 ${t.done ? "opacity-50" : ""}`}>
                     {t.tag}
                   </Badge>
                 </div>

@@ -67,6 +67,65 @@ export const listStaff = createServerFn({ method: "GET" })
     });
   });
 
+export type CounsellorOption = {
+  id: string;
+  name: string;
+  initials: string;
+};
+
+export const listCounsellors = createServerFn({ method: "GET" })
+  .validator((params?: { branchId?: string }) => params || {})
+  .handler(async ({ data }): Promise<CounsellorOption[]> => {
+    const supabase = createSupabaseServerClient();
+
+    const { data: users, error } = await supabase
+      .from("users")
+      .select(
+        `
+        id,
+        name,
+        active,
+        user_roles(role),
+        staff_branches(branch_id)
+      `,
+      )
+      .eq("active", true)
+      .order("name");
+
+    if (error || !users) {
+      console.error("Error listing counsellors:", error);
+      return [];
+    }
+
+    return users
+      .filter((u: any) => {
+        const roles = u.user_roles?.map((r: any) => r.role) || [];
+        const isCounsellor =
+          roles.includes("counsellor") ||
+          roles.includes("branch_admin") ||
+          roles.includes("super_admin");
+        if (!isCounsellor) return false;
+
+        if (data.branchId && data.branchId !== "all") {
+          const isSuperAdmin = roles.includes("super_admin");
+          if (isSuperAdmin) return true;
+          const branchIds = (u.staff_branches || []).map((sb: any) => sb.branch_id);
+          return branchIds.includes(data.branchId);
+        }
+        return true;
+      })
+      .map((u: any) => ({
+        id: u.id,
+        name: u.name,
+        initials: u.name
+          .split(" ")
+          .map((n: string) => n[0])
+          .slice(0, 2)
+          .join("")
+          .toUpperCase(),
+      }));
+  });
+
 function formatRoleName(role: string) {
   switch (role) {
     case "super_admin":
