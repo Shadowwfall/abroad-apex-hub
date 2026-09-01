@@ -3,9 +3,14 @@ import { getRequestHeaders, setCookie } from "@tanstack/react-start/server";
 import type { Database } from "./types";
 
 export function createSupabaseServerClient() {
-  const url = process.env.VITE_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL;
+  const url =
+    process.env.VITE_SUPABASE_URL ||
+    import.meta.env.VITE_SUPABASE_URL ||
+    "https://masqzazjkxejuvjyrqow.supabase.co";
   const key =
-    process.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+    import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+    "sb_publishable__Ej94PLKoXO0A0Jg-NR09w_zIIK8-Rs";
 
   if (!url || !key) {
     throw new Error("Missing Supabase environment variables on server");
@@ -27,9 +32,10 @@ export function createSupabaseServerClient() {
           cookiesToSet.forEach(({ name, value, options }) => {
             setCookie(name, value, {
               ...options,
-              sameSite: options?.sameSite
-                ? (options.sameSite.toLowerCase() as "lax" | "strict" | "none")
-                : "lax",
+              sameSite:
+                typeof options?.sameSite === "string"
+                  ? (options.sameSite.toLowerCase() as "lax" | "strict" | "none")
+                  : "lax",
             });
           });
         } catch {

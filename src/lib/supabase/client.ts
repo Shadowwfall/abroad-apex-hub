@@ -6,8 +6,11 @@ let client: ReturnType<typeof createBrowserClient<Database>> | undefined;
 export function getSupabaseBrowserClient() {
   if (client) return client;
 
-  const url = import.meta.env.VITE_SUPABASE_URL;
-  const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+  const url =
+    import.meta.env.VITE_SUPABASE_URL || "https://masqzazjkxejuvjyrqow.supabase.co";
+  const key =
+    import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+    "sb_publishable__Ej94PLKoXO0A0Jg-NR09w_zIIK8-Rs";
 
   if (!url || !key) {
     throw new Error(
