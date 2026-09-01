@@ -10,6 +10,7 @@ import {
   Loader2,
   UserCheck,
   MessageSquare,
+  Users,
 } from "lucide-react";
 
 import { PageHeader } from "@/components/crm/PageHeader";
@@ -35,6 +36,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { listLeads, createLead, convertLeadToStudent, addLeadNote } from "@/lib/api/leads";
+import { listCounsellors } from "@/lib/api/staff";
 import { useApp } from "@/lib/context/app-context";
 import { destinations } from "@/data/checklists";
 
@@ -64,8 +66,11 @@ function LeadsPage() {
 
   const [addOpen, setAddOpen] = useState(false);
   const [noteOpen, setNoteOpen] = useState(false);
+  const [convertOpen, setConvertOpen] = useState(false);
   const [activeLead, setActiveLead] = useState<any>(null);
   const [noteBody, setNoteBody] = useState("");
+  const [selectedCounsellor, setSelectedCounsellor] = useState("");
+  const [convertIntake, setConvertIntake] = useState("Sep 2026");
 
   const [leadForm, setLeadForm] = useState({
     name: "",
@@ -82,12 +87,18 @@ function LeadsPage() {
     queryFn: () => listLeads({ data: { branchId: activeBranchId, status: "new" } }),
   });
 
+  const { data: counsellors = [] } = useQuery({
+    queryKey: ["counsellors", { branchId: activeBranchId }],
+    queryFn: () => listCounsellors({ data: { branchId: activeBranchId } }),
+    enabled: convertOpen,
+  });
+
   const createMutation = useMutation({
     mutationFn: (data: typeof leadForm) =>
       createLead({
         data: {
           ...data,
-          branchId: activeBranchId !== "all" ? activeBranchId : user?.branches[0]?.id,
+          branchId: activeBranchId !== "all" ? activeBranchId : user?.branches[0]?.id || undefined!,
         },
       }),
     onSuccess: (lead) => {
@@ -110,14 +121,14 @@ function LeadsPage() {
   });
 
   const convertMutation = useMutation({
-    mutationFn: (leadId: string) => {
+    mutationFn: ({ leadId, counsellorId, intake }: { leadId: string; counsellorId: string; intake: string }) => {
       const branchToUse = activeBranchId !== "all" ? activeBranchId : user?.branches[0]?.id || "";
       return convertLeadToStudent({
         data: {
           leadId,
           branchId: branchToUse,
-          counsellorId: user?.id,
-          intake: "Sep 2026",
+          counsellorId,
+          intake,
         },
       });
     },
@@ -131,6 +142,9 @@ function LeadsPage() {
       queryClient.invalidateQueries({ queryKey: ["leads"] });
       queryClient.invalidateQueries({ queryKey: ["students"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-kpis"] });
+      setConvertOpen(false);
+      setSelectedCounsellor("");
+      setConvertIntake("Sep 2026");
     },
     onError: (err: Error) => {
       toast.error(err.message || "Failed to convert lead");
@@ -351,8 +365,10 @@ function LeadsPage() {
                 <Button
                   size="sm"
                   className="rounded-xl gradient-warm text-primary-foreground"
-                  disabled={convertMutation.isPending}
-                  onClick={() => convertMutation.mutate(lead.id)}
+                  onClick={() => {
+                    setActiveLead(lead);
+                    setConvertOpen(true);
+                  }}
                 >
                   <UserCheck className="mr-1.5 size-3.5" /> Convert
                 </Button>
@@ -407,6 +423,102 @@ function LeadsPage() {
                 disabled={noteMutation.isPending}
               >
                 {noteMutation.isPending ? "Saving..." : "Save Note"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Convert Lead → Student Dialog */}
+      <Dialog open={convertOpen} onOpenChange={(open) => {
+        setConvertOpen(open);
+        if (!open) {
+          setSelectedCounsellor("");
+          setConvertIntake("Sep 2026");
+        }
+      }}>
+        <DialogContent className="max-w-md rounded-2xl">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (!selectedCounsellor) {
+                toast.error("Please select a counsellor to proceed");
+                return;
+              }
+              if (!activeLead) return;
+              convertMutation.mutate({
+                leadId: activeLead.id,
+                counsellorId: selectedCounsellor,
+                intake: convertIntake,
+              });
+            }}
+          >
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2 text-xl">
+                <Users className="size-5 text-primary" /> Assign Counsellor
+              </DialogTitle>
+              <DialogDescription>
+                Select a counsellor to assign to <span className="font-semibold text-foreground">{activeLead?.name}</span> before converting to a student file.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="grid gap-4 py-4">
+              <div className="space-y-1.5">
+                <Label>Counsellor *</Label>
+                <Select
+                  value={selectedCounsellor}
+                  onValueChange={setSelectedCounsellor}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a counsellor…" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {counsellors.map((c) => (
+                      <SelectItem key={c.id} value={c.id}>
+                        {c.name}
+                      </SelectItem>
+                    ))}
+                    {counsellors.length === 0 && (
+                      <SelectItem value="__none" disabled>
+                        No counsellors found
+                      </SelectItem>
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label htmlFor="convert-intake">Preferred Intake</Label>
+                <Input
+                  id="convert-intake"
+                  placeholder="e.g. Sep 2026"
+                  value={convertIntake}
+                  onChange={(e) => setConvertIntake(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setConvertOpen(false)}
+                disabled={convertMutation.isPending}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                className="gradient-warm text-primary-foreground"
+                disabled={convertMutation.isPending || !selectedCounsellor}
+              >
+                {convertMutation.isPending ? (
+                  <>
+                    <Loader2 className="mr-2 size-4 animate-spin" /> Converting...
+                  </>
+                ) : (
+                  "Convert to Student"
+                )}
               </Button>
             </DialogFooter>
           </form>

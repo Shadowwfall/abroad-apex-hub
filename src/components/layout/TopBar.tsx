@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Bell, Moon, Plus, Search, Settings, Sun, LogOut, User } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "@tanstack/react-router";
+import { NewLeadModal } from "@/components/crm/NewLeadModal";
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
@@ -82,14 +83,16 @@ export function TopBar() {
         </div>
 
         <div className="flex shrink-0 items-center gap-1.5">
-          <Link to="/students">
-            <Button
-              size="sm"
-              className="hidden rounded-xl gradient-warm text-primary-foreground shadow-[var(--shadow-soft)] hover:opacity-92 sm:inline-flex"
-            >
-              <Plus className="size-4" /> Quick Add
-            </Button>
-          </Link>
+          <NewLeadModal
+            trigger={
+              <Button
+                size="sm"
+                className="hidden rounded-xl gradient-warm text-primary-foreground shadow-[var(--shadow-soft)] hover:opacity-92 sm:inline-flex"
+              >
+                <Plus className="size-4" /> Quick Add
+              </Button>
+            }
+          />
 
           <Button
             variant="ghost"
